@@ -1,3 +1,19 @@
+<a name="2.0.0-beta.11-sstk.7"></a>
+# 2.0.0-beta.11-sstk.7 (2017-06-09)
+
+* include drone details in npmrc ([ccd5a2d](https://github.com/react-toolbox/react-toolbox/commit/ccd5a2d))
+* Release 2.0.0-beta.11-sstk.7 ([3a13a76](https://github.com/react-toolbox/react-toolbox/commit/3a13a76))
+
+
+
+<a name="2.0.0-beta.11-sstk.7"></a>
+# 2.0.0-beta.11-sstk.7 (2017-06-09)
+
+* include drone details in npmrc ([ccd5a2d](https://github.com/react-toolbox/react-toolbox/commit/ccd5a2d))
+* Release 2.0.0-beta.11-sstk.7 ([3a13a76](https://github.com/react-toolbox/react-toolbox/commit/3a13a76))
+
+
+
 <a name="2.0.0-beta.11-sstk.5"></a>
 # 2.0.0-beta.11-sstk.5 (2017-06-09)
 
