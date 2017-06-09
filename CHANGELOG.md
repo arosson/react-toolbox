@@ -1,3 +1,11 @@
+<a name="2.0.0-beta.11-sstk.11"></a>
+# 2.0.0-beta.11-sstk.11 (2017-06-09)
+
+* change artifactory auth ([9971891](https://github.com/react-toolbox/react-toolbox/commit/9971891))
+* Release 2.0.0-beta.11-sstk.11 ([4db8692](https://github.com/react-toolbox/react-toolbox/commit/4db8692))
+
+
+
 <a name="2.0.0-beta.11-sstk.7"></a>
 # 2.0.0-beta.11-sstk.7 (2017-06-09)
 
