@@ -18,14 +18,3 @@ build:
       - DEBUG=* npm run pr -- --artifacts=results.xml,lint.xml
     when:
       event: pull_request
-
-
-publish:
-  npm:
-    username: "drone"
-    password: "y9#YuM4F_zn<2G<M"
-    email: "tech.jsplatform.team@shutterstock.com"
-    registry: "http://artifactory.shuttercorp.net/artifactory/api/npm-composite/contributor"
-    always_auth: true
-    when:
-      event: tag
