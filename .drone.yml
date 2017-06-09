@@ -1,0 +1,31 @@
+build:
+  prtest:
+    image: docker-artifactory.shuttercorp.net/test/sonar-node6-alpine:latest
+    environment:
+      - NPM_CONFIG_USERCONFIG=.npmrc
+    commands:
+      - export GITHUB_PR_NUMBER=${DRONE_PULL_REQUEST}
+      - export GITHUB_REPO=${DRONE_REPO}
+      - export APP_NAME=`node -e "console.log(require('./package.json').name);"`
+      - npm install
+      - npm config set ${APP_NAME}:lintOptions:outputFormat checkstyle
+      - npm config set ${APP_NAME}:lintOptions:outputFile lint.xml
+      - npm config set ${APP_NAME}:testOptions:outputFormat xunit
+      - npm config set ${APP_NAME}:testOptions:outputFile results.xml
+      - "npm run lint ||:"
+      - "npm run test ||:"
+      - "npm run sonar -- --debug --mode=pr ||:"
+      - DEBUG=* npm run pr -- --artifacts=results.xml,lint.xml
+    when:
+      event: pull_request
+
+
+publish:
+  npm:
+    username: "drone"
+    password: "y9#YuM4F_zn<2G<M"
+    email: "tech.jsplatform.team@shutterstock.com"
+    registry: "http://artifactory.shuttercorp.net/artifactory/api/npm-composite/contributor"
+    always_auth: true
+    when:
+      event: tag

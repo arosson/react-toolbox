@@ -18,6 +18,9 @@
     "email": "issues@react-toolbox.com",
     "url": "https://github.com/react-toolbox/react-toolbox/issues"
   },
+  "publishConfig": {
+    "registry": "http://artifactory.shuttercorp.net/artifactory/api/npm/contributor"
+  },
   "keywords": [
     "components",
     "material design",
