@@ -1,3 +1,17 @@
+<a name="2.0.0-beta.11-sstk.5"></a>
+# 2.0.0-beta.11-sstk.5 (2017-06-09)
+
+* Release 2.0.0-beta.11-sstk.5 ([1ea0426](https://github.com/react-toolbox/react-toolbox/commit/1ea0426))
+
+
+
+<a name="2.0.0-beta.11-sstk.5"></a>
+# 2.0.0-beta.11-sstk.5 (2017-06-09)
+
+* Release 2.0.0-beta.11-sstk.5 ([1ea0426](https://github.com/react-toolbox/react-toolbox/commit/1ea0426))
+
+
+
 <a name="2.0.0-beta.8"></a>
 # 2.0.0-beta.8 (2017-04-06)
 
