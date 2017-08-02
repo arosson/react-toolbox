@@ -62,8 +62,10 @@ class Root extends Component {
           delayedCall
           onChange={this.handleAppBarFixed}
           intervalCheck
+          intervalDelay={5}
           resizeCheck
           scrollCheck
+          scrollThrottle={5}
           partialVisibility={true}
         >
           <div style={{ height: '200px', background: 'pink' }} />
