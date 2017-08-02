@@ -21,7 +21,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './spec/index.html'));
 });
 
-const port = 8080;
+const port = 8082;
 const ip = internalIp.v4();
 
 app.listen(port, (err) => {

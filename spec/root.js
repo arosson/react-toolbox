@@ -1,6 +1,7 @@
 /* global VERSION */
 import 'normalize.css';
 import React, { Component } from 'react';
+import VisibilitySensor from 'react-visibility-sensor';
 
 import { Layout, Panel, NavDrawer } from '../components/layout';
 import AppBar from '../components/app_bar';
@@ -33,69 +34,87 @@ import Tooltip from './components/tooltip';
 import style from './style.css';
 
 class Root extends Component {
-  state = { pinned: false };
+  state = {
+    pinned: false,
+    isAppBarFixed: false,
+  };
+
+  handleAppBarFixed = (isFixed) => {
+    this.setState({
+      isAppBarFixed: !isFixed,
+    });
+  }
 
   handleSideBarToggle = () => {
     this.setState({ pinned: !this.state.pinned });
   };
 
+  onChange = (isVisible) => {
+    console.log('Element is now %s', isVisible ? 'visible' : 'hidden');
+  };
+
   render() {
+    const { isAppBarFixed } = this.state;
+
     return (
-      <Layout>
-        <AppBar
-          title={`React Toolbox Spec ${VERSION}`}
-          onLeftIconClick={this.handleSideBarToggle}
-          className={style.appbar}
-          leftIcon="menu"
-          fixed
-          flat
+      <div>
+        <VisibilitySensor
+          delayedCall
+          onChange={this.handleAppBarFixed}
+          intervalCheck
+          resizeCheck
+          scrollCheck
+          partialVisibility={true}
         >
-          <ButtonToolbox
-            className={style.github}
-            href="http://react-toolbox.com/#/"
-            target="_blank"
-            icon="web"
-            floating
-            accent
+          <div style={{ height: '200px', background: 'pink' }} />
+        </VisibilitySensor>
+        <Layout>
+          <AppBar
+            title={`React Toolbox Spec ${VERSION}`}
+            onLeftIconClick={this.handleSideBarToggle}
+            className={style.appbar}
+            leftIcon="menu"
+            fixed={isAppBarFixed}
+            flat
           />
-        </AppBar>
+          <NavDrawer
+            onEscKeyDown={this.handleSideBarToggle}
+            onOverlayClick={this.handleSideBarToggle}
+            permanentAt="lg"
+            pinned
+            clipped
+          >
+            This will content filter and indexes for examples
+          </NavDrawer>
 
-        <NavDrawer
-          active={this.state.pinned}
-          onEscKeyDown={this.handleSideBarToggle}
-          onOverlayClick={this.handleSideBarToggle}
-          permanentAt="lg"
-        >
-          This will content filter and indexes for examples
-        </NavDrawer>
-
-        <Panel className={style.app}>
-          <Autocomplete />
-          <AppBarTest />
-          <Avatar />
-          <FontIcon />
-          <Button />
-          <Card />
-          <Checkbox />
-          <Chip />
-          <Dialog />
-          <Drawer />
-          <Dropdown />
-          <IconMenu />
-          <InputTest />
-          <List />
-          <Menu />
-          <Pickers />
-          <Progress />
-          <Radio />
-          <Slider />
-          <Snackbar />
-          <Switch />
-          <Table />
-          <Tabs />
-          <Tooltip />
-        </Panel>
-      </Layout>
+          <Panel className={style.app}>
+            <Autocomplete />
+            <AppBarTest />
+            <Avatar />
+            <FontIcon />
+            <Button />
+            <Card />
+            <Checkbox />
+            <Chip />
+            <Dialog />
+            <Drawer />
+            <Dropdown />
+            <IconMenu />
+            <InputTest />
+            <List />
+            <Menu />
+            <Pickers />
+            <Progress />
+            <Radio />
+            <Slider />
+            <Snackbar />
+            <Switch />
+            <Table />
+            <Tabs />
+            <Tooltip />
+          </Panel>
+        </Layout>
+      </div>
     );
   }
 }

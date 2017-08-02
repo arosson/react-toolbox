@@ -25,12 +25,20 @@
   left: 0;
   position: absolute;
   right: 0;
-  top: 0;
+  top: var(--appbar-height);
 
   &:not(.bodyScroll) {
     height: 100vh;
     max-height: 100vh;
     overflow-y: scroll;
+  }
+
+  @media screen and (--xxs-viewport) and (--portrait) {
+    top: var(--appbar-height-m-portrait);
+  }
+
+  @media screen and (--xs-viewport) and (--landscape) {
+    top: var(--appbar-height-m-landscape);
   }
 }
 
@@ -67,6 +75,11 @@
 .appbarFixed {
   &.appbarAppBar {
     z-index: var(--z-index-high);
+  }
+
+  & .sidebarDrawer,
+  & .navDrawerDrawer {
+    position: fixed;
   }
 
   & .panel {
