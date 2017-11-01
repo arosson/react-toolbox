@@ -15,6 +15,5 @@ build:
       - "npm run lint ||:"
       - "npm run test ||:"
       - "npm run sonar -- --debug --mode=pr ||:"
-      - DEBUG=* npm run pr -- --artifacts=results.xml,lint.xml
     when:
       event: pull_request
