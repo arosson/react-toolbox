@@ -188,7 +188,7 @@ const factory = (Input) => {
           }
           break;
         case KEYS.ENTER:
-          !currentItem.disabled && this.handleSelect(currentItem[valueKey]);
+          !currentItem.disabled && this.handleSelect(currentItem[valueKey], event);
           break;
       }
 
