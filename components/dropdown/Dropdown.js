@@ -15,7 +15,8 @@ const KEYS = {
   UP_ARROW: 38,
   DOWN_ARROW: 40,
   TAB: 9,
-  ENTER: 13
+  ENTER: 13,
+  ESCAPE: 27,
 };
 
 const factory = (Input) => {
@@ -189,6 +190,9 @@ const factory = (Input) => {
           break;
         case KEYS.ENTER:
           !currentItem.disabled && this.handleSelect(currentItem[valueKey], event);
+          break;
+        case KEYS.ESCAPE:
+          this.setState({ active: false });
           break;
       }
 
