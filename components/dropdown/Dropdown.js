@@ -328,7 +328,7 @@ const factory = (Input) => {
           className={className}
           tabIndex={focusedItemIndex === idx ? 0 : -1}
           onFocus={this.setFocusedItemIndex.bind(this, idx)}
-          onMouseDown={!item.disabled && this.handleSelect.bind(this, item[valueKey])}
+          onMouseDown={!item.disabled ? this.handleSelect.bind(this, item[valueKey]) : undefined}
         >
           {this.props.template ? this.props.template(item) : item[labelKey]}
         </li>

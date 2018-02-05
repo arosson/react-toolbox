@@ -114,7 +114,7 @@ describe('Slider', () => {
       const instance = wrapper.instance();
       instance.setState({ sliderStart: 0, sliderLength: 1000 });
       instance.handleResize = (evt, callback) => { callback(); };
-      wrapper.childAt(0).simulate('mouseDown', event);
+      wrapper.childAt(0).childAt(0).simulate('mouseDown', event);
       expect(onChange).toHaveBeenCalledWith(-300);
     });
 
@@ -125,7 +125,7 @@ describe('Slider', () => {
       const instance = wrapper.instance();
       instance.setState({ sliderStart: 0, sliderLength: 1000 });
       instance.handleResize = (evt, callback) => { callback(); };
-      wrapper.childAt(0).simulate('touchStart', event);
+      wrapper.childAt(0).childAt(0).simulate('touchStart', event);
       expect(onChange).toHaveBeenCalledWith(-300);
     });
 
@@ -136,7 +136,7 @@ describe('Slider', () => {
       const instance = wrapper.instance();
       instance.setState({ sliderStart: 0, sliderLength: 1000 });
       instance.handleResize = (evt, callback) => { callback(); };
-      wrapper.childAt(0).simulate('mouseDown', event);
+      wrapper.childAt(0).childAt(0).simulate('mouseDown', event);
       expect(onChange).toHaveBeenCalledWith(90);
     });
 
@@ -154,7 +154,7 @@ describe('Slider', () => {
       const onChange = jest.fn();
       const wrapper = mount(<Slider editable value={50} onChange={onChange} />);
       wrapper.instance().setState({ sliderStart: 0, sliderLength: 1000 });
-      wrapper.childAt(0).simulate('mouseDown', { pageX: 900, pageY: 0 });
+      wrapper.childAt(0).childAt(0).simulate('mouseDown', { pageX: 900, pageY: 0 });
       expect(onChange).toHaveBeenCalled();
     });
   });
