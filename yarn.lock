@@ -10,6 +10,13 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
+"@shutterstock-libs/react-css-themr@^2.2.1":
+  version "2.2.1"
+  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/@shutterstock-libs/react-css-themr/-/@shutterstock-libs/react-css-themr-2.2.1.tgz#7a7835a1c5bfb6363d2b9444088ed7f6cc4e91ba"
+  dependencies:
+    hoist-non-react-statics "^1.2.0"
+    invariant "^2.2.1"
+
 "@types/node@*":
   version "9.4.0"
   resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/@types/node/-/node-9.4.0.tgz#b85a0bcf1e1cc84eb4901b7e96966aedc6f078d1"
@@ -6267,13 +6274,6 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-"react-css-themr@ 2.1.2-sstk.2":
-  version "2.1.2-sstk.2"
-  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react-css-themr/-/react-css-themr-2.1.2-sstk.2.tgz#173a34475093812ffbbbe4e852907a3ce92e7395"
-  dependencies:
-    hoist-non-react-statics "^1.2.0"
-    invariant "^2.2.1"
-
 react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
@@ -6449,7 +6449,7 @@ rechoir@^0.6.2:
   dependencies:
     resolve "^1.1.6"
 
-redbox-react@1.5:
+redbox-react@^1.5.0:
   version "1.5.0"
   resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/redbox-react/-/redbox-react-1.5.0.tgz#04dab11557d26651bf3562a67c22ace56c5d3967"
   dependencies:

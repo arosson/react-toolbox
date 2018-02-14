@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 import styleShape from 'react-style-proptype';
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { round, range } from '../utils/utils';
 import { SLIDER } from '../identifiers';
 import events from '../utils/events';

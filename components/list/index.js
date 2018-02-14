@@ -1,4 +1,4 @@
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { LIST } from '../identifiers';
 import { Avatar } from '../avatar';
 import { Checkbox } from '../checkbox';

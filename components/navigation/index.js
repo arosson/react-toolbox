@@ -1,4 +1,4 @@
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { NAVIGATION } from '../identifiers';
 import { navigationFactory } from './Navigation';
 import { Button } from '../button';

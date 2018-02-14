@@ -1,5 +1,5 @@
 {
-  "name": "react-toolbox",
+  "name": "@shutterstock-libs/react-toolbox",
   "description": "A set of React components implementing Google's Material Design specification with the power of CSS Modules.",
   "homepage": "http://www.react-toolbox.com",
   "version": "2.0.0-beta.12-sstk.9",
@@ -26,10 +26,10 @@
     "toolkit"
   ],
   "dependencies": {
+    "@shutterstock-libs/react-css-themr": "^2.2.1",
     "classnames": "^2.2.5",
     "core-js": "^2.4.0",
     "ramda": "^0.23.0",
-    "react-css-themr": " 2.1.2-sstk.2",
     "react-style-proptype": "^3.0.0",
     "react-transition-group": "^2.2.1"
   },
@@ -85,7 +85,7 @@
     "react-test-renderer": "^16.2.0",
     "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.4",
-    "redbox-react": "1.5",
+    "redbox-react": "^1.5.0",
     "rimraf": "^2.6.1",
     "style-loader": "^0.18.1",
     "stylelint": "^7.10.1",

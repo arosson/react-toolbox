@@ -1,4 +1,4 @@
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { TIME_PICKER } from '../identifiers';
 import { timePickerFactory } from './TimePicker';
 import timePickerDialogFactory from './TimePickerDialog';

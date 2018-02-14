@@ -1,4 +1,4 @@
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { AUTOCOMPLETE } from '../identifiers';
 import { autocompleteFactory } from './Autocomplete';
 import { Chip } from '../chip';

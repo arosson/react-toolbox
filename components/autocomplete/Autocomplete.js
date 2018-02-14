@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { AUTOCOMPLETE } from '../identifiers.js';
 import InjectChip from '../chip/Chip.js';
 import InjectInput from '../input/Input.js';

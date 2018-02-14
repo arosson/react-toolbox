@@ -1,4 +1,4 @@
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { AVATAR } from '../identifiers';
 import { avatarFactory } from './Avatar';
 import { FontIcon } from '../font_icon/FontIcon';

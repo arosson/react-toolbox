@@ -1,4 +1,4 @@
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { CHIP } from '../identifiers';
 import { chipFactory } from './Chip';
 import { Avatar } from '../avatar';

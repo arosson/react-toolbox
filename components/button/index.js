@@ -1,4 +1,4 @@
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { BUTTON } from '../identifiers';
 import { buttonFactory } from './Button';
 import { browseButtonFactory } from './BrowseButton';

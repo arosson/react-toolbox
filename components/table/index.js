@@ -1,4 +1,4 @@
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { TABLE } from '../identifiers';
 import { Checkbox } from '../checkbox';
 import { FontIcon } from '../font_icon';

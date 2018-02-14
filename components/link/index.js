@@ -1,4 +1,4 @@
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { LINK } from '../identifiers';
 import { Link } from './Link';
 import theme from './theme.css';

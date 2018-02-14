@@ -1,4 +1,4 @@
-import { themr } from 'react-css-themr';
+import { themr } from '@shutterstock-libs/react-css-themr';
 import { DRAWER } from '../identifiers';
 import { Overlay } from '../overlay';
 import { drawerFactory } from './Drawer';
