@@ -10,11 +10,11 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@shutterstock-libs/react-css-themr@^2.2.1":
-  version "2.2.1"
-  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/@shutterstock-libs/react-css-themr/-/@shutterstock-libs/react-css-themr-2.2.1.tgz#7a7835a1c5bfb6363d2b9444088ed7f6cc4e91ba"
+"@shutterstock-libs/react-css-themr@^2.2.3":
+  version "2.2.3"
+  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/@shutterstock-libs/react-css-themr/-/@shutterstock-libs/react-css-themr-2.2.3.tgz#9fc8a323d0e2c7a24d5e389a16875022c6e222c2"
   dependencies:
-    hoist-non-react-statics "^1.2.0"
+    hoist-non-react-statics "^2.3.1"
     invariant "^2.2.1"
 
 "@types/node@*":
@@ -3409,9 +3409,9 @@ hoek@4.x.x:
   version "4.2.0"
   resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/hoek/-/hoek-4.2.0.tgz#72d9d0754f7fe25ca2d01ad8f8f9a9449a89526d"
 
-hoist-non-react-statics@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
+hoist-non-react-statics@^2.3.1:
+  version "2.3.1"
+  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/hoist-non-react-statics/-/hoist-non-react-statics-2.3.1.tgz#343db84c6018c650778898240135a1420ee22ce0"
 
 home-or-tmp@^2.0.0:
   version "2.0.0"
