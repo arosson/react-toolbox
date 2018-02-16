@@ -26,7 +26,7 @@
     "toolkit"
   ],
   "dependencies": {
-    "@shutterstock-libs/react-css-themr": "^2.2.1",
+    "@shutterstock-libs/react-css-themr": "^2.2.3",
     "classnames": "^2.2.5",
     "core-js": "^2.4.0",
     "ramda": "^0.23.0",
