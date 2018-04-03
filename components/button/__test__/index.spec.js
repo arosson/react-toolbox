@@ -6,7 +6,6 @@ import theme from '../theme.css';
 describe('Button', () => {
   describe('#render', () => {
     it('uses flat and neutral styles by default', () => {
-      console.log(theme);
       const wrapper = mount(<Button theme={theme} />);
       const { className } = wrapper.find('button').props();
       expect(className).toContain(theme.flat);
