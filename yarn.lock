@@ -10,9 +10,9 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@shutterstock-libs/react-css-themr@^2.2.1":
-  version "2.2.1"
-  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/@shutterstock-libs/react-css-themr/-/@shutterstock-libs/react-css-themr-2.2.1.tgz#9fc8a323d0e2c7a24d5e389a16875022c6e222c2"
+"@shutterstock-libs/react-css-themr@^2.2.3":
+  version "2.2.3"
+  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/@shutterstock-libs/react-css-themr/-/@shutterstock-libs/react-css-themr-2.2.3.tgz#9fc8a323d0e2c7a24d5e389a16875022c6e222c2"
   dependencies:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.1"
