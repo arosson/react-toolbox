@@ -19,7 +19,7 @@ const factory = (Button) => {
         PropTypes.element,
       ]),
       onClick: PropTypes.func,
-      onTimeout: PropTypes.func,
+      onTimeout: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
       theme: PropTypes.shape({
         accept: PropTypes.string,
         active: PropTypes.string,

@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { themr } from '@shutterstock-libs/react-css-themr';
 import { TABS } from '../identifiers';
 
+/* eslint-disable react/prefer-stateless-function */
 class TabContent extends Component {
   static propTypes = {
     active: PropTypes.bool,
