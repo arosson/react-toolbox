@@ -2,52 +2,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { themr } from '@shutterstock-libs/react-css-themr';
-import classnames from 'classnames';
-import { DIALOG } from '../identifiers';
+import { DIALOG, INNER_DIALOG } from '../identifiers';
 import Portal from '../hoc/Portal';
 import ActivableRenderer from '../hoc/ActivableRenderer';
 import InjectButton from '../button/Button';
 import InjectOverlay from '../overlay/Overlay';
+import { innerDialogFactory } from './InnerDialog';
 
 const factory = (Overlay, Button) => {
-  const Dialog = (props) => {
-    const actions = props.actions.map((action, idx) => {
-      const className = classnames(props.theme.button, { [action.className]: action.className });
-      return <Button key={idx} {...action} className={className} />; // eslint-disable-line
-    });
-
-    const className = classnames([props.theme.dialog, props.theme[props.type]], {
-      [props.theme.active]: props.active,
-    }, props.className);
-
-    return (
-      <Portal className={props.theme.wrapper}>
-        <Overlay
-          active={props.active}
-          className={props.theme.overlay}
-          onClick={props.onOverlayClick}
-          onEscKeyDown={props.onEscKeyDown}
-          onMouseDown={props.onOverlayMouseDown}
-          onMouseMove={props.onOverlayMouseMove}
-          onMouseUp={props.onOverlayMouseUp}
-          theme={props.theme}
-          themeNamespace="overlay"
-        />
-        <div data-react-toolbox="dialog" className={className}>
-          <section role="body" className={props.theme.body}>
-            {props.title ? <h6 className={props.theme.title}>{props.title}</h6> : null}
-            {props.children}
-          </section>
-          {actions.length
-            ? <nav className={props.theme.navigation}>
-              {actions}
-            </nav>
-            : null
-          }
-        </div>
-      </Portal>
+  const InnerDialog = themr(INNER_DIALOG)(innerDialogFactory(Button));
+  const Dialog = props => (
+    <Portal className={props.theme.wrapper}>
+      <Overlay
+        active={props.active}
+        className={props.theme.overlay}
+        onClick={props.onOverlayClick}
+        onEscKeyDown={props.onEscKeyDown}
+        onMouseDown={props.onOverlayMouseDown}
+        onMouseMove={props.onOverlayMouseMove}
+        onMouseUp={props.onOverlayMouseUp}
+        theme={props.theme}
+        themeNamespace="overlay"
+      />
+      <InnerDialog
+        actions={props.actions}
+        theme={props.theme}
+        title={props.title}
+        type={props.type}
+        active={props.active}
+        className={props.className}
+      >
+        {props.children}
+      </InnerDialog>
+    </Portal>
     );
-  };
 
   Dialog.propTypes = {
     actions: PropTypes.arrayOf(PropTypes.shape({

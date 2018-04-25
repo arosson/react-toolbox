@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../components/button';
-import Dialog from '../../components/dialog';
+import Dialog, { InnerDialog } from '../../components/dialog';
 import Dropdown from '../../components/dropdown';
 
 const dialogTypes = [
@@ -14,12 +14,19 @@ const dialogTypes = [
 class DialogTest extends React.Component {
   state = {
     active: false,
+    innerActive: false,
     type: 'normal',
   };
 
   handleToggle = () => {
     this.setState({
       active: !this.state.active,
+    });
+  };
+
+  handleToggleInner = () => {
+    this.setState({
+      innerActive: !this.state.innerActive,
     });
   };
 
@@ -30,6 +37,11 @@ class DialogTest extends React.Component {
   actions = [
     { label: 'Disagree', primary: true, onClick: this.handleToggle },
     { label: 'Agree', primary: true, onClick: this.handleToggle },
+  ];
+
+  actionsInner = [
+    { label: 'Disagree', primary: true, onClick: this.handleToggleInner },
+    { label: 'Agree', primary: true, onClick: this.handleToggleInner },
   ];
 
   render() {
@@ -45,6 +57,7 @@ class DialogTest extends React.Component {
           value={this.state.type}
         />
         <Button label="Show Dialog" raised primary onClick={this.handleToggle} />
+        <Button label="Show InnerDialog" raised primary onClick={this.handleToggleInner} />
         <ContextComponent>
           <Dialog
             actions={this.actions}
@@ -57,6 +70,14 @@ class DialogTest extends React.Component {
             <p>Let Google help apps <strong>determine location</strong>. This means sending anonymous location data to Google, even when no apps are running.</p>
             <DialogChild />
           </Dialog>
+          {this.state.innerActive &&
+            <InnerDialog
+              actions={this.actionsInner}
+              type={this.state.type}
+              title="Use Google's location service?"
+            >
+              <DialogChild />
+            </InnerDialog>}
         </ContextComponent>
       </section>
     );
