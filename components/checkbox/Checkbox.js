@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import styleShape from 'react-style-proptype';
 import { themr } from '@shutterstock-libs/react-css-themr';
 import { CHECKBOX } from '../identifiers';
 import rippleFactory from '../ripple/Ripple';
@@ -22,7 +21,8 @@ const factory = (Check) => {
       onChange: PropTypes.func,
       onMouseEnter: PropTypes.func,
       onMouseLeave: PropTypes.func,
-      style: styleShape,
+      // eslint-disable-next-line react/forbid-prop-types
+      style: PropTypes.object,
       theme: PropTypes.shape({
         disabled: PropTypes.string,
         field: PropTypes.string,

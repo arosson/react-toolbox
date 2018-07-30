@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import classnames from 'classnames';
-import styleShape from 'react-style-proptype';
 import { themr } from '@shutterstock-libs/react-css-themr';
 import { round, range } from '../utils/utils';
 import { SLIDER } from '../identifiers';
@@ -25,7 +24,8 @@ const factory = (ProgressBar, Input) => {
       pinned: PropTypes.bool,
       snaps: PropTypes.bool,
       step: PropTypes.number,
-      style: styleShape,
+      // eslint-disable-next-line react/forbid-prop-types
+      style: PropTypes.object,
       theme: PropTypes.shape({
         container: PropTypes.string,
         editable: PropTypes.string,
