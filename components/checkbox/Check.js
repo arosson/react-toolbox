@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import styleShape from 'react-style-proptype';
 
 const factory = (ripple) => {
   const Check = ({ checked, children, onMouseDown, theme, style }) => (
@@ -19,7 +18,8 @@ const factory = (ripple) => {
     checked: PropTypes.bool,
     children: PropTypes.node,
     onMouseDown: PropTypes.func,
-    style: styleShape,
+    // eslint-disable-next-line react/forbid-prop-types
+    style: PropTypes.object,
     theme: PropTypes.shape({
       check: PropTypes.string,
       checked: PropTypes.string,
