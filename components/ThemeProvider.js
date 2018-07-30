@@ -1,1 +1,1 @@
-export { ThemeProvider as default } from '@shutterstock-libs/react-css-themr';
+export { ThemeProvider as default } from 'react-css-themr';

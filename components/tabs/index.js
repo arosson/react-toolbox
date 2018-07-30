@@ -1,4 +1,4 @@
-import { themr } from '@shutterstock-libs/react-css-themr';
+import { themr } from 'react-css-themr';
 import { TABS } from '../identifiers';
 import { tabsFactory } from './Tabs';
 import { TabContent } from './TabContent';

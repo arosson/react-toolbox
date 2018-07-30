@@ -1,7 +1,7 @@
 import React, { cloneElement, Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { themr } from '@shutterstock-libs/react-css-themr';
+import { themr } from 'react-css-themr';
 import { TABLE } from '../identifiers';
 import InjectCheckbox from '../checkbox/Checkbox';
 import InjectTableCell from './TableCell';

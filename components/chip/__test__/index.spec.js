@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { themr } from '@shutterstock-libs/react-css-themr';
+import { themr } from 'react-css-themr';
 import { CHIP } from '../../identifiers';
 import { tooltipFactory } from '../../tooltip';
 import { chipFactory } from '../Chip';
