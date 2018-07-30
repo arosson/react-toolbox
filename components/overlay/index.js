@@ -1,4 +1,4 @@
-import { themr } from '@shutterstock-libs/react-css-themr';
+import { themr } from 'react-css-themr';
 import { OVERLAY } from '../identifiers';
 import { Overlay } from './Overlay';
 import theme from './theme.css';

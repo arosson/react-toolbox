@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import { themr } from '@shutterstock-libs/react-css-themr';
+import { themr } from 'react-css-themr';
 import { LAYOUT } from '../identifiers';
 
 const Panel = ({ bodyScroll, children, className, theme, ...other }) => {

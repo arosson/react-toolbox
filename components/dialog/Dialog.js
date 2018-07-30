@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/aria-role */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { themr } from '@shutterstock-libs/react-css-themr';
+import { themr } from 'react-css-themr';
 import { DIALOG, INNER_DIALOG } from '../identifiers';
 import Portal from '../hoc/Portal';
 import ActivableRenderer from '../hoc/ActivableRenderer';

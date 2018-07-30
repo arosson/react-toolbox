@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/aria-role */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { themr } from '@shutterstock-libs/react-css-themr';
+import { themr } from 'react-css-themr';
 import classnames from 'classnames';
 import { INNER_DIALOG } from '../identifiers';
 import InjectButton from '../button/Button';
