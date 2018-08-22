@@ -90,7 +90,7 @@
   stroke-dashoffset: 0;
   stroke-linecap: round;
   stroke-miterlimit: 20;
-  stroke-width: 4;
+  stroke-width: 3.6;
   transition: stroke-dasharray var(--animation-duration) var(--animation-curve-default);
 }
 
