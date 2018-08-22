@@ -5,6 +5,8 @@ import { themr } from 'react-css-themr';
 import { PROGRESS_BAR } from '../identifiers';
 import prefixer from '../utils/prefixer';
 
+const RADIUS = 20.2;
+
 class ProgressBar extends Component {
   static propTypes = {
     buffer: PropTypes.number,
@@ -47,7 +49,7 @@ class ProgressBar extends Component {
 
   circularStyle() {
     return this.props.mode !== 'indeterminate'
-      ? { strokeDasharray: `${2 * Math.PI * 25 * this.calculateRatio(this.props.value)}, 400` }
+      ? { strokeDasharray: `${2 * Math.PI * RADIUS * this.calculateRatio(this.props.value)}, 400` }
       : undefined;
   }
 
@@ -64,7 +66,7 @@ class ProgressBar extends Component {
   renderCircular() {
     return (
       <svg className={this.props.theme.circle} viewBox="22 22 44 44">
-        <circle className={this.props.theme.path} style={this.circularStyle()} cx="44" cy="44" r="20.2" />
+        <circle className={this.props.theme.path} style={this.circularStyle()} cx="44" cy="44" r={RADIUS} />
       </svg>
     );
   }
