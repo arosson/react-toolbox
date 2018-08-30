@@ -198,11 +198,12 @@ const factory = (Input) => {
           // Compare the typeahead string against the option values to find a match. The comparison is done in lower case so matching is not case sensitive
           const typeaheadMatchIndex = this.props.source.findIndex(({ label = '' }) => label.toLowerCase().indexOf(typeaheadAccumulator.toLowerCase()) > -1);
           // If a match is found, use its index as the focused option
-          newFoucsedItemIndex = typeaheadMatchIndex > -1 ? typeaheadMatchIndex : newFoucsedItemIndex;
+          if (typeaheadMatchIndex > -1) { newFoucsedItemIndex = typeaheadMatchIndex; }
         }
 
       clearTimeout(this.state.typeaheadTimer);
       this.setState({
+        // When the user has stopped typing, this timeout will be allowed to complete and clear the accumulator
         typeaheadTimer: setTimeout(() => { this.setState({ typeaheadAccumulator: '' }) }, typeaheadDebounce),
       });
 
