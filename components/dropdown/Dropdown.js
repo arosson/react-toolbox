@@ -11,13 +11,10 @@ import contains from 'dom-helpers/query/contains';
 import activeElement from 'dom-helpers/activeElement';
 import ownerDocument from 'dom-helpers/ownerDocument';
 
-const KEYS = {
-  UP_ARROW: 38,
-  DOWN_ARROW: 40,
-  TAB: 9,
-  ENTER: 13,
-  ESCAPE: 27,
-};
+const singleCharWord = new RegExp(/\b.\b/); // Matcher for event key codes with a single character
+let typeaheadAccumulator = ''; // Accumulation of typeahead characters
+let typeaheadDebounce = 500; // Clear the buffer this many ms after the user stops typing
+let typeaheadTimer; // Used as a setTimeout for the typeahead debounce function
 
 const factory = (Input) => {
   class Dropdown extends Component {
@@ -155,6 +152,7 @@ const factory = (Input) => {
     };
 
     handleKeyDown = (event) => {
+      const { key } = event;
       const { source, valueKey } = this.props;
       const { focusedItemIndex } = this.state;
       const lastItemIndex = source.length - 1;
@@ -163,18 +161,17 @@ const factory = (Input) => {
       const nextItemIndex = this.getNextSelectableItemIndex(focusedItemIndex || 0);
       const previousItemIndex = this.getPreviousSelectableItemIndex(focusedItemIndex || 0);
 
-      const charCode = event.which || event.keyCode;
       let newFoucsedItemIndex;
 
-      switch (charCode) {
-        case KEYS.UP_ARROW:
+      switch (key) {
+        case 'ArrowUp':
           newFoucsedItemIndex = previousItemIndex;
           break;
-        case KEYS.DOWN_ARROW:
+        case 'ArrowDown':
           newFoucsedItemIndex = nextItemIndex;
           break;
-        case KEYS.TAB:
-          if (event.shiftKey) {
+        case 'Tab':
+          if (event.key === 'Shift') {
             if (focusedItemIndex === 0) {
               // No-op: Allow default behavior which should take the focus out of the menu
             } else {
@@ -188,18 +185,29 @@ const factory = (Input) => {
             }
           }
           break;
-        case KEYS.ENTER:
+        case 'Enter':
           !currentItem.disabled && this.handleSelect(currentItem[valueKey], event);
           break;
-        case KEYS.ESCAPE:
+        case 'Escape':
           this.setState({ active: false });
           break;
-      }
+        default:
+          // If the current key pressed is a single character, add it to the typeahead accumulation string
+          if (singleCharWord.test(key)) { typeaheadAccumulator += key; }
+          // Compare the typeahead string against the option values to find a match. The comparison is done in lower case so matching is not case sensitive
+          const typeaheadMatchIndex = this.props.source.findIndex(({ label = '' }) => label.toLowerCase().indexOf(typeaheadAccumulator.toLowerCase()) > -1);
+          // If a match is found, use its index as the focused option
+          newFoucsedItemIndex = typeaheadMatchIndex > -1 ? typeaheadMatchIndex : newFoucsedItemIndex;
+        }
+
+      clearTimeout(typeaheadTimer);
+      typeaheadTimer = setTimeout(() => { typeaheadAccumulator = ''; }, typeaheadDebounce);
 
       // If we are just shifting focus between list items, update the focus ourselves and prevent propagation of the event
       if (newFoucsedItemIndex || newFoucsedItemIndex === 0) {
         event.preventDefault();
         event.stopPropagation();
+        this.dropdown.children[previousItemIndex].blur();
         this.dropdown.children[newFoucsedItemIndex].focus();
         return false;
       }
