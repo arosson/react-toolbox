@@ -201,9 +201,9 @@ const factory = (Input) => {
           if (typeaheadMatchIndex > -1) { newFoucsedItemIndex = typeaheadMatchIndex; }
         }
 
-      clearTimeout(this.state.typeaheadTimer);
+      clearTimeout(this.state.typeaheadTimer); // After every keystroke, reset the timer to allow the user to continue typing into the accumulator
       this.setState({
-        // When the user has stopped typing, this timeout will be allowed to complete and clear the accumulator
+        // When the user has stopped typing, this timeout will be allowed to complete and clear the accumulator for the next search
         typeaheadTimer: setTimeout(() => { this.setState({ typeaheadAccumulator: '' }) }, typeaheadDebounce),
       });
 
