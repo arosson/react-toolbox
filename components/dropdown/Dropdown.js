@@ -12,9 +12,7 @@ import activeElement from 'dom-helpers/activeElement';
 import ownerDocument from 'dom-helpers/ownerDocument';
 
 const singleCharWord = new RegExp(/\b.\b/); // Matcher for event key codes with a single character
-let typeaheadAccumulator = ''; // Accumulation of typeahead characters
 let typeaheadDebounce = 500; // Clear the buffer this many ms after the user stops typing
-let typeaheadTimer; // Used as a setTimeout for the typeahead debounce function
 
 const factory = (Input) => {
   class Dropdown extends Component {
@@ -74,6 +72,8 @@ const factory = (Input) => {
       active: false,
       up: false,
       focusedItemIndex: undefined,
+      typeaheadAccumulator: '', // Accumulation of typeahead characters
+      typeaheadTimer: null, // Used as a setTimeout for the typeahead debounce function
     };
 
     dropdown = null;
@@ -192,16 +192,24 @@ const factory = (Input) => {
           this.setState({ active: false });
           break;
         default:
+          const { typeaheadAccumulator } = this.state;
           // If the current key pressed is a single character, add it to the typeahead accumulation string
-          if (singleCharWord.test(key)) { typeaheadAccumulator += key; }
+          if (singleCharWord.test(key)) { this.setState({ typeaheadAccumulator: typeaheadAccumulator + key }); }
           // Compare the typeahead string against the option values to find a match. The comparison is done in lower case so matching is not case sensitive
           const typeaheadMatchIndex = this.props.source.findIndex(({ label = '' }) => label.toLowerCase().indexOf(typeaheadAccumulator.toLowerCase()) > -1);
           // If a match is found, use its index as the focused option
           newFoucsedItemIndex = typeaheadMatchIndex > -1 ? typeaheadMatchIndex : newFoucsedItemIndex;
         }
 
-      clearTimeout(typeaheadTimer);
-      typeaheadTimer = setTimeout(() => { typeaheadAccumulator = ''; }, typeaheadDebounce);
+      clearTimeout(this.state.typeaheadTimer);
+      this.setState({
+        typeaheadTimer: setTimeout(
+          () => {
+          this.setState({
+            typeaheadAccumulator: '',
+          });
+        }, typeaheadDebounce),
+      });
 
       // If we are just shifting focus between list items, update the focus ourselves and prevent propagation of the event
       if (newFoucsedItemIndex || newFoucsedItemIndex === 0) {
@@ -217,6 +225,9 @@ const factory = (Input) => {
       this.open(event);
       events.pauseEvent(event);
       if (this.props.onClick) this.props.onClick(event);
+      setTimeout(() => {
+        this.dropdown.children[this.state.focusedItemIndex || 0].focus();
+      }, 0);
     };
 
     handleDocumentClick = (event) => {
@@ -277,11 +288,6 @@ const factory = (Input) => {
           const currentFocusedItem = activeElement(ownerDocument(this.dropdown));
           // Check to see if the focused element is part of the menu -- in which case we don't want to close the menu.
           if (!contains(this.dropdown, currentFocusedItem)) {
-            // Reset the focused item index before we close the menu so if the menu is opened again, we start fresh.
-            this.setState({
-              focusedItemIndex: undefined
-            });
-
             if (this.state.active) this.close();
             if (this.props.onBlur) this.props.onBlur(event);
           }
