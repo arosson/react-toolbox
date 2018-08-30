@@ -203,12 +203,7 @@ const factory = (Input) => {
 
       clearTimeout(this.state.typeaheadTimer);
       this.setState({
-        typeaheadTimer: setTimeout(
-          () => {
-          this.setState({
-            typeaheadAccumulator: '',
-          });
-        }, typeaheadDebounce),
+        typeaheadTimer: setTimeout(() => { this.setState({ typeaheadAccumulator: '' }) }, typeaheadDebounce),
       });
 
       // If we are just shifting focus between list items, update the focus ourselves and prevent propagation of the event
