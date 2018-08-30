@@ -211,7 +211,6 @@ const factory = (Input) => {
       if (newFoucsedItemIndex || newFoucsedItemIndex === 0) {
         event.preventDefault();
         event.stopPropagation();
-        this.dropdown.children[previousItemIndex].blur();
         this.dropdown.children[newFoucsedItemIndex].focus();
         return false;
       }
