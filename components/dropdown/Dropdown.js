@@ -161,27 +161,27 @@ const factory = (Input) => {
       const nextItemIndex = this.getNextSelectableItemIndex(focusedItemIndex || 0);
       const previousItemIndex = this.getPreviousSelectableItemIndex(focusedItemIndex || 0);
 
-      let newFoucsedItemIndex;
+      let newFocusedItemIndex;
 
       switch (key) {
         case 'ArrowUp':
-        newFoucsedItemIndex = previousItemIndex;
+        newFocusedItemIndex = previousItemIndex;
         break;
         case 'ArrowDown':
-        newFoucsedItemIndex = nextItemIndex;
+        newFocusedItemIndex = nextItemIndex;
         break;
         case 'Tab':
           if (event.shiftKey) {
             if (focusedItemIndex === 0) {
               // No-op: Allow default behavior which should take the focus out of the menu
             } else {
-              newFoucsedItemIndex = previousItemIndex;
+              newFocusedItemIndex = previousItemIndex;
             }
           } else {
             if (focusedItemIndex === lastItemIndex) {
               // No-op: Allow default behavior which should take the focus out of the menu
             } else {
-              newFoucsedItemIndex = nextItemIndex;
+              newFocusedItemIndex = nextItemIndex;
             }
           }
           break;
@@ -195,9 +195,10 @@ const factory = (Input) => {
           // If the current key pressed is a single character, add it to the typeahead accumulation string
           if (singleCharWord.test(key)) { this.typeaheadAccumulator = this.typeaheadAccumulator + key; }
           // Compare the typeahead string against the option values to find a match. The comparison is done in lower case so matching is not case sensitive
+          // @TODO - Replace indexOf with String.startsWith() when IE support comes along.
           const typeaheadMatchIndex = this.props.source.findIndex(({ label = '' }) => label.toLowerCase().indexOf(this.typeaheadAccumulator.toLowerCase()) > -1);
           // If a match is found, use its index as the focused option
-          if (typeaheadMatchIndex > -1) { newFoucsedItemIndex = typeaheadMatchIndex; }
+          if (typeaheadMatchIndex > -1) { newFocusedItemIndex = typeaheadMatchIndex; }
         }
 
       // After every keystroke, reset the timer to allow the user to continue typing into the accumulator
@@ -206,10 +207,10 @@ const factory = (Input) => {
       this.typeaheadTimer = setTimeout(() => { this.typeaheadAccumulator = '' }, typeaheadDebounce);
 
       // If we are just shifting focus between list items, update the focus ourselves and prevent propagation of the event
-      if (newFoucsedItemIndex || newFoucsedItemIndex === 0) {
+      if (newFocusedItemIndex || newFocusedItemIndex === 0) {
         event.preventDefault();
         event.stopPropagation();
-        this.dropdown.children[newFoucsedItemIndex].focus();
+        this.dropdown.children[newFocusedItemIndex].focus();
         return false;
       }
     };
@@ -218,9 +219,6 @@ const factory = (Input) => {
       this.open(event);
       events.pauseEvent(event);
       if (this.props.onClick) this.props.onClick(event);
-      setTimeout(() => {
-        this.dropdown.children[this.state.focusedItemIndex || 0].focus();
-      }, 0);
     };
 
     handleDocumentClick = (event) => {
@@ -242,6 +240,13 @@ const factory = (Input) => {
       const up = this.props.auto ? client.top > ((screenHeight / 2) + client.height) : false;
       if (this.inputNode) this.inputNode.blur();
       this.setState({ active: true, up });
+
+      // This fixes an issue where the keyboard events are no longer being tracked once an item is selected when the `template` prop is used.
+      // For some reason the focus is lost when the select is reopened, this restores it with the correct item selected.
+      // @TODO Further investigation is needed, this is a quick and dirty fix
+      setTimeout(() => {
+        this.dropdown.children[this.state.focusedItemIndex || 0].focus();
+      }, 0);
     };
 
     handleFocus = (event) => {
