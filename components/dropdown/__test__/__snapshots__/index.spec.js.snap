@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dropdown should render 1`] = `
+<div
+  className="dropdown"
+  data-react-toolbox="dropdown"
+  onBlur={[Function]}
+  onFocus={[Function]}
+>
+  <Input
+    className="value"
+    disabled={false}
+    floating={true}
+    hint=""
+    multiline={false}
+    onClick={[Function]}
+    readOnly={true}
+    required={false}
+    tabIndex="0"
+    theme={null}
+    themeNamespace="input"
+    type={null}
+    value=""
+  />
+  <ul
+    className="values"
+    onKeyDown={[Function]}
+  >
+    <li
+      className=""
+      key="0"
+      onFocus={[Function]}
+      onMouseDown={[Function]}
+      tabIndex={-1}
+    >
+      England
+    </li>
+    <li
+      className=""
+      key="1"
+      onFocus={[Function]}
+      onMouseDown={[Function]}
+      tabIndex={-1}
+    >
+      Spain
+    </li>
+    <li
+      className="disabled"
+      key="2"
+      onFocus={[Function]}
+      tabIndex={-1}
+    >
+      Thailand
+    </li>
+    <li
+      className=""
+      key="3"
+      onFocus={[Function]}
+      onMouseDown={[Function]}
+      tabIndex={-1}
+    >
+      USA
+    </li>
+    <li
+      className=""
+      key="4"
+      onFocus={[Function]}
+      onMouseDown={[Function]}
+      tabIndex={-1}
+    >
+      France
+    </li>
+  </ul>
+</div>
+`;
