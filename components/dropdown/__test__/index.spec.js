@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { Dropdown } from '../Dropdown';
 import theme from '../theme.css';
 
@@ -19,13 +19,5 @@ describe('Dropdown', () => {
     );
 
     expect(wrapper).toMatchSnapshot();
-  });
-  it('should open the select on click', () => {
-    const wrapper = mount(
-      <Dropdown theme={theme} source={countries} />,
-    );
-    expect(wrapper.active).toBeFalsy();
-    wrapper.find('input').simulate('click');
-    expect(wrapper.instance().state.active).toEqual(true);
   });
 });
