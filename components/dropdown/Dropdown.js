@@ -11,13 +11,8 @@ import contains from 'dom-helpers/query/contains';
 import activeElement from 'dom-helpers/activeElement';
 import ownerDocument from 'dom-helpers/ownerDocument';
 
-const KEYS = {
-  UP_ARROW: 38,
-  DOWN_ARROW: 40,
-  TAB: 9,
-  ENTER: 13,
-  ESCAPE: 27,
-};
+const singleCharWord = new RegExp(/\b.\b/); // Matcher for event key codes with a single character
+const typeaheadDebounce = 500; // Clear the buffer this many ms after the user stops typing
 
 const factory = (Input) => {
   class Dropdown extends Component {
@@ -80,6 +75,8 @@ const factory = (Input) => {
     };
 
     dropdown = null;
+    typeaheadAccumulator = null; // Accumulation of typeahead characters
+    typeaheadTimer = null; // Used as a setTimeout for the typeahead debounce function
 
     componentWillUpdate(nextProps, nextState) {
       if (!this.state.active && nextState.active) {
@@ -155,6 +152,7 @@ const factory = (Input) => {
     };
 
     handleKeyDown = (event) => {
+      const { key } = event;
       const { source, valueKey } = this.props;
       const { focusedItemIndex } = this.state;
       const lastItemIndex = source.length - 1;
@@ -163,44 +161,56 @@ const factory = (Input) => {
       const nextItemIndex = this.getNextSelectableItemIndex(focusedItemIndex || 0);
       const previousItemIndex = this.getPreviousSelectableItemIndex(focusedItemIndex || 0);
 
-      const charCode = event.which || event.keyCode;
-      let newFoucsedItemIndex;
+      let newFocusedItemIndex;
 
-      switch (charCode) {
-        case KEYS.UP_ARROW:
-          newFoucsedItemIndex = previousItemIndex;
-          break;
-        case KEYS.DOWN_ARROW:
-          newFoucsedItemIndex = nextItemIndex;
-          break;
-        case KEYS.TAB:
+      switch (key) {
+        case 'ArrowUp':
+        newFocusedItemIndex = previousItemIndex;
+        break;
+        case 'ArrowDown':
+        newFocusedItemIndex = nextItemIndex;
+        break;
+        case 'Tab':
           if (event.shiftKey) {
             if (focusedItemIndex === 0) {
               // No-op: Allow default behavior which should take the focus out of the menu
             } else {
-              newFoucsedItemIndex = previousItemIndex;
+              newFocusedItemIndex = previousItemIndex;
             }
           } else {
             if (focusedItemIndex === lastItemIndex) {
               // No-op: Allow default behavior which should take the focus out of the menu
             } else {
-              newFoucsedItemIndex = nextItemIndex;
+              newFocusedItemIndex = nextItemIndex;
             }
           }
           break;
-        case KEYS.ENTER:
+        case 'Enter':
           !currentItem.disabled && this.handleSelect(currentItem[valueKey], event);
           break;
-        case KEYS.ESCAPE:
+        case 'Escape':
           this.setState({ active: false });
           break;
-      }
+        default:
+          // If the current key pressed is a single character, add it to the typeahead accumulation string
+          if (singleCharWord.test(key)) { this.typeaheadAccumulator = this.typeaheadAccumulator + key; }
+          // Compare the typeahead string against the option values to find a match. The comparison is done in lower case so matching is not case sensitive
+          // @TODO - Replace indexOf with String.startsWith() when IE support comes along.
+          const typeaheadMatchIndex = this.props.source.findIndex(({ label = '' }) => label.toLowerCase().indexOf(this.typeaheadAccumulator.toLowerCase()) > -1);
+          // If a match is found, use its index as the focused option
+          if (typeaheadMatchIndex > -1) { newFocusedItemIndex = typeaheadMatchIndex; }
+        }
+
+      // After every keystroke, reset the timer to allow the user to continue typing into the accumulator
+      clearTimeout(this.typeaheadTimer);
+      // When the user has stopped typing, this timeout will be allowed to complete and clear the accumulator for the next search
+      this.typeaheadTimer = setTimeout(() => { this.typeaheadAccumulator = '' }, typeaheadDebounce);
 
       // If we are just shifting focus between list items, update the focus ourselves and prevent propagation of the event
-      if (newFoucsedItemIndex || newFoucsedItemIndex === 0) {
+      if (newFocusedItemIndex || newFocusedItemIndex === 0) {
         event.preventDefault();
         event.stopPropagation();
-        this.dropdown.children[newFoucsedItemIndex].focus();
+        this.dropdown.children[newFocusedItemIndex].focus();
         return false;
       }
     };
@@ -230,6 +240,13 @@ const factory = (Input) => {
       const up = this.props.auto ? client.top > ((screenHeight / 2) + client.height) : false;
       if (this.inputNode) this.inputNode.blur();
       this.setState({ active: true, up });
+
+      // This fixes an issue where the keyboard events are no longer being tracked once an item is selected when the `template` prop is used.
+      // For some reason the focus is lost when the select is reopened, this restores it with the correct item selected.
+      // @TODO Further investigation is needed, this is a quick and dirty fix
+      setTimeout(() => {
+        this.dropdown.children[this.state.focusedItemIndex || 0].focus();
+      }, 0);
     };
 
     handleFocus = (event) => {
@@ -269,11 +286,6 @@ const factory = (Input) => {
           const currentFocusedItem = activeElement(ownerDocument(this.dropdown));
           // Check to see if the focused element is part of the menu -- in which case we don't want to close the menu.
           if (!contains(this.dropdown, currentFocusedItem)) {
-            // Reset the focused item index before we close the menu so if the menu is opened again, we start fresh.
-            this.setState({
-              focusedItemIndex: undefined
-            });
-
             if (this.state.active) this.close();
             if (this.props.onBlur) this.props.onBlur(event);
           }
@@ -362,7 +374,7 @@ const factory = (Input) => {
             onClick={this.handleClick}
             required={this.props.required}
             readOnly
-            ref={(node) => { this.inputNode = node && node.getWrappedInstance(); }}
+            ref={(node) => { this.inputNode = node && node.getWrappedInstance && node.getWrappedInstance(); }}
             type={template && selected ? 'hidden' : null}
             theme={theme}
             themeNamespace="input"
