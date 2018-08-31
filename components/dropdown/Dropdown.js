@@ -12,7 +12,7 @@ import activeElement from 'dom-helpers/activeElement';
 import ownerDocument from 'dom-helpers/ownerDocument';
 
 const singleCharWord = new RegExp(/\b.\b/); // Matcher for event key codes with a single character
-let typeaheadDebounce = 500; // Clear the buffer this many ms after the user stops typing
+const typeaheadDebounce = 500; // Clear the buffer this many ms after the user stops typing
 
 const factory = (Input) => {
   class Dropdown extends Component {
@@ -72,11 +72,11 @@ const factory = (Input) => {
       active: false,
       up: false,
       focusedItemIndex: undefined,
-      typeaheadAccumulator: '', // Accumulation of typeahead characters
-      typeaheadTimer: null, // Used as a setTimeout for the typeahead debounce function
     };
 
     dropdown = null;
+    typeaheadAccumulator = null; // Accumulation of typeahead characters
+    typeaheadTimer = null; // Used as a setTimeout for the typeahead debounce function
 
     componentWillUpdate(nextProps, nextState) {
       if (!this.state.active && nextState.active) {
@@ -165,13 +165,13 @@ const factory = (Input) => {
 
       switch (key) {
         case 'ArrowUp':
-          newFoucsedItemIndex = previousItemIndex;
-          break;
+        newFoucsedItemIndex = previousItemIndex;
+        break;
         case 'ArrowDown':
-          newFoucsedItemIndex = nextItemIndex;
-          break;
+        newFoucsedItemIndex = nextItemIndex;
+        break;
         case 'Tab':
-          if (event.key === 'Shift') {
+          if (event.shiftKey) {
             if (focusedItemIndex === 0) {
               // No-op: Allow default behavior which should take the focus out of the menu
             } else {
@@ -192,20 +192,18 @@ const factory = (Input) => {
           this.setState({ active: false });
           break;
         default:
-          const { typeaheadAccumulator } = this.state;
           // If the current key pressed is a single character, add it to the typeahead accumulation string
-          if (singleCharWord.test(key)) { this.setState({ typeaheadAccumulator: typeaheadAccumulator + key }); }
+          if (singleCharWord.test(key)) { this.typeaheadAccumulator = this.typeaheadAccumulator + key; }
           // Compare the typeahead string against the option values to find a match. The comparison is done in lower case so matching is not case sensitive
-          const typeaheadMatchIndex = this.props.source.findIndex(({ label = '' }) => label.toLowerCase().indexOf(typeaheadAccumulator.toLowerCase()) > -1);
+          const typeaheadMatchIndex = this.props.source.findIndex(({ label = '' }) => label.toLowerCase().indexOf(this.typeaheadAccumulator.toLowerCase()) > -1);
           // If a match is found, use its index as the focused option
           if (typeaheadMatchIndex > -1) { newFoucsedItemIndex = typeaheadMatchIndex; }
         }
 
-      clearTimeout(this.state.typeaheadTimer); // After every keystroke, reset the timer to allow the user to continue typing into the accumulator
-      this.setState({
-        // When the user has stopped typing, this timeout will be allowed to complete and clear the accumulator for the next search
-        typeaheadTimer: setTimeout(() => { this.setState({ typeaheadAccumulator: '' }) }, typeaheadDebounce),
-      });
+      // After every keystroke, reset the timer to allow the user to continue typing into the accumulator
+      clearTimeout(this.typeaheadTimer);
+      // When the user has stopped typing, this timeout will be allowed to complete and clear the accumulator for the next search
+      this.typeaheadTimer = setTimeout(() => { this.typeaheadAccumulator = '' }, typeaheadDebounce);
 
       // If we are just shifting focus between list items, update the focus ourselves and prevent propagation of the event
       if (newFoucsedItemIndex || newFoucsedItemIndex === 0) {
