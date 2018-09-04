@@ -71,11 +71,11 @@ const factory = (Input) => {
     state = {
       active: false,
       up: false,
-      focusedItemIndex: undefined,
+      focusedItemIndex: 0,
     };
 
     dropdown = null;
-    typeaheadAccumulator = null; // Accumulation of typeahead characters
+    typeaheadAccumulator = ''; // Accumulation of typeahead characters
     typeaheadTimer = null; // Used as a setTimeout for the typeahead debounce function
 
     componentWillUpdate(nextProps, nextState) {
@@ -87,6 +87,11 @@ const factory = (Input) => {
     componentDidUpdate(prevProps, prevState) {
       if (prevState.active && !this.state.active) {
         events.removeEventsFromDocument(this.getDocumentEvents());
+      } else if (prevState.active !== this.state.active && this.dropdown && this.dropdown.children) {
+        // This fixes an issue where the keyboard events are no longer being tracked once an item is selected when the `template` prop is used.
+        // For some reason the focus is lost when the select is reopened, this restores it with the correct item selected.
+        // @TODO Further investigation is needed, this is a quick and dirty fix
+        this.dropdown.children[this.state.focusedItemIndex].focus();
       }
     }
 
@@ -157,9 +162,9 @@ const factory = (Input) => {
       const { focusedItemIndex } = this.state;
       const lastItemIndex = source.length - 1;
 
-      const currentItem = source[focusedItemIndex || 0];
-      const nextItemIndex = this.getNextSelectableItemIndex(focusedItemIndex || 0);
-      const previousItemIndex = this.getPreviousSelectableItemIndex(focusedItemIndex || 0);
+      const currentItem = source[focusedItemIndex];
+      const nextItemIndex = this.getNextSelectableItemIndex(focusedItemIndex);
+      const previousItemIndex = this.getPreviousSelectableItemIndex(focusedItemIndex);
 
       let newFocusedItemIndex;
 
@@ -240,13 +245,6 @@ const factory = (Input) => {
       const up = this.props.auto ? client.top > ((screenHeight / 2) + client.height) : false;
       if (this.inputNode) this.inputNode.blur();
       this.setState({ active: true, up });
-
-      // This fixes an issue where the keyboard events are no longer being tracked once an item is selected when the `template` prop is used.
-      // For some reason the focus is lost when the select is reopened, this restores it with the correct item selected.
-      // @TODO Further investigation is needed, this is a quick and dirty fix
-      setTimeout(() => {
-        this.dropdown.children[this.state.focusedItemIndex || 0].focus();
-      }, 0);
     };
 
     handleFocus = (event) => {
@@ -259,7 +257,7 @@ const factory = (Input) => {
         return;
       }
 
-      let firstFocusableItem = focusedItemIndex || 0;
+      let firstFocusableItem = focusedItemIndex;
       // We can't assume the first item should be selected by default since it might be disabled
       if (source && source[firstFocusableItem].disabled) {
         firstFocusableItem = this.getNextSelectableItemIndex(firstFocusableItem);
