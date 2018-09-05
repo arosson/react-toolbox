@@ -77,6 +77,7 @@ const factory = (Input) => {
     dropdown = null;
     typeaheadAccumulator = ''; // Accumulation of typeahead characters
     typeaheadTimer = null; // Used as a setTimeout for the typeahead debounce function
+    requestFocusRaf = null; // Used for requestAnimationFrame to request focus during long frames
 
     componentWillUpdate(nextProps, nextState) {
       if (!this.state.active && nextState.active) {
@@ -88,10 +89,10 @@ const factory = (Input) => {
       if (prevState.active && !this.state.active) {
         events.removeEventsFromDocument(this.getDocumentEvents());
       } else if (prevState.active !== this.state.active && this.dropdown && this.dropdown.children) {
-        // This fixes an issue where the keyboard events are no longer being tracked once an item is selected when the `template` prop is used.
-        // For some reason the focus is lost when the select is reopened, this restores it with the correct item selected.
-        // @TODO Further investigation is needed, this is a quick and dirty fix
-        this.dropdown.children[this.state.focusedItemIndex].focus();
+        // Use requestAnimationFrame to focus on either the currently selected or first list item.
+        // This is implemented to solve a bug during long paint frames as an attempt to focus() is made
+        // before the element is available in the DOM
+        this.requestFocusRaf = requestAnimationFrame(this.requestFocus);
       }
     }
 
@@ -246,6 +247,19 @@ const factory = (Input) => {
       if (this.inputNode) this.inputNode.blur();
       this.setState({ active: true, up });
     };
+
+    requestFocus = () => {
+      const focusEl = this.dropdown.children[this.state.focusedItemIndex];
+      // As soon as the element is focused, cancel the animation frame and return
+      if (focusEl === document.activeElement) {
+        this.requestFocusRaf = cancelAnimationFrame(this.requestFocus);
+        return;
+      }
+      // Attempt to focus on the element. This will be repeated on every animation frame
+      // until the element becomes available in the DOM.
+      focusEl.focus();
+      this.requestFocusRaf = requestAnimationFrame(this.requestFocus);
+    }
 
     handleFocus = (event) => {
       event.stopPropagation();
