@@ -71,7 +71,7 @@ const factory = (Input) => {
     state = {
       active: false,
       up: false,
-      focusedItemIndex: 0,
+      focusedItemIndex: undefined,
     };
 
     dropdown = null;
@@ -158,9 +158,9 @@ const factory = (Input) => {
       const { focusedItemIndex } = this.state;
       const lastItemIndex = source.length - 1;
 
-      const currentItem = source[focusedItemIndex];
-      const nextItemIndex = this.getNextSelectableItemIndex(focusedItemIndex);
-      const previousItemIndex = this.getPreviousSelectableItemIndex(focusedItemIndex);
+      const currentItem = source[focusedItemIndex || 0];
+      const nextItemIndex = this.getNextSelectableItemIndex(focusedItemIndex || 0);
+      const previousItemIndex = this.getPreviousSelectableItemIndex(focusedItemIndex || 0);
 
       let newFocusedItemIndex;
 
@@ -249,7 +249,7 @@ const factory = (Input) => {
     };
 
     requestFocus = () => {
-      const focusEl = this.dropdown.children[this.state.focusedItemIndex];
+      const focusEl = this.dropdown.children[this.state.focusedItemIndex || 0];
       // As soon as the element is focused, cancel the animation frame and return
       if (focusEl === document.activeElement) {
         this.requestFocusRaf = cancelAnimationFrame(this.requestFocus);
