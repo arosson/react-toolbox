@@ -27,11 +27,11 @@ exports[`Dropdown should render 1`] = `
     onKeyDown={[Function]}
   >
     <li
-      className=""
+      className="focused"
       key="0"
       onFocus={[Function]}
       onMouseDown={[Function]}
-      tabIndex={-1}
+      tabIndex={0}
     >
       England
     </li>

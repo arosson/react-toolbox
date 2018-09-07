@@ -88,11 +88,6 @@ const factory = (Input) => {
     componentDidUpdate(prevProps, prevState) {
       if (prevState.active && !this.state.active) {
         events.removeEventsFromDocument(this.getDocumentEvents());
-      } else if (prevState.active !== this.state.active && this.dropdown && this.dropdown.children) {
-        // Use requestAnimationFrame to focus on either the currently selected or first list item.
-        // This is implemented to solve a bug during long paint frames as an attempt to focus() is made
-        // before the element is available in the DOM
-        this.requestFocusRaf = requestAnimationFrame(this.requestFocus);
       }
     }
 
@@ -246,6 +241,11 @@ const factory = (Input) => {
       const up = this.props.auto ? client.top > ((screenHeight / 2) + client.height) : false;
       if (this.inputNode) this.inputNode.blur();
       this.setState({ active: true, up });
+
+      // Use requestAnimationFrame to focus on either the currently selected or first list item.
+      // This is implemented to solve a bug during long paint frames as an attempt to focus() is made
+      // before the element is available in the DOM
+      this.requestFocusRaf = requestAnimationFrame(this.requestFocus);
     };
 
     requestFocus = () => {
@@ -263,24 +263,11 @@ const factory = (Input) => {
 
     handleFocus = (event) => {
       event.stopPropagation();
-      const { source } = this.props;
-      const { focusedItemIndex } = this.state;
 
       const dropdown = this.dropdown;
       if (!dropdown || !dropdown.children) {
         return;
       }
-
-      let firstFocusableItem = focusedItemIndex;
-      // We can't assume the first item should be selected by default since it might be disabled
-      if (source && source[firstFocusableItem].disabled) {
-        firstFocusableItem = this.getNextSelectableItemIndex(firstFocusableItem);
-      }
-
-      // Need a setTimeout here because a parent item is stealing the focus immediately after this method is invoked
-      setTimeout(function() {
-        dropdown.children[firstFocusableItem].focus();
-      }, 30);
 
       if (!this.props.disabled) this.open(event);
       if (this.props.onFocus) this.props.onFocus(event);
