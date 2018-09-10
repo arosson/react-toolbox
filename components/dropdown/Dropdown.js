@@ -350,7 +350,7 @@ const factory = (Input) => {
     render() {
       const {
         allowBlank, auto, labelKey, required, onChange, onFocus, onBlur, // eslint-disable-line no-unused-vars
-        source, template, theme, valueKey, ...others
+        source, template, theme, valueKey, autoComplete, ...others
       } = this.props;
       const selected = this.getSelectedItem();
       const className = classnames(theme.dropdown, {
@@ -372,10 +372,11 @@ const factory = (Input) => {
             tabIndex="0"
             className={theme.value}
             onClick={this.handleClick}
+            onChange={this.handleSelect}
             required={this.props.required}
-            readOnly
+            readOnly={!autoComplete}
             ref={(node) => { this.inputNode = node && node.getWrappedInstance && node.getWrappedInstance(); }}
-            type={template && selected ? 'hidden' : null}
+            type={template && selected && !autoComplete ? 'hidden' : null}
             theme={theme}
             themeNamespace="input"
             value={selected && selected[labelKey] ? selected[labelKey] : ''}
