@@ -370,7 +370,7 @@ const factory = (Input) => {
             {...others}
             tabIndex="0"
             className={classnames(theme.value, {
-              [theme.hideInput]: template && selected && autoComplete
+              [theme.hideNativeInput]: template && selected && autoComplete
             })}
             autoComplete={autoComplete}
             onClick={this.handleClick}
