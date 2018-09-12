@@ -378,8 +378,8 @@ const factory = (Input) => {
             required={this.props.required}
             readOnly={!autoComplete}
             ref={(node) => { this.inputNode = node && node.getWrappedInstance && node.getWrappedInstance(); }}
-            theme={theme}
             type={template && selected && !autoComplete ? 'hidden' : null}
+            theme={theme}
             themeNamespace="input"
             value={selected && selected[labelKey] ? selected[labelKey] : ''}
           />
