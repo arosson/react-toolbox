@@ -1,31 +1,35 @@
 import React from 'react';
 import Dropdown from '../../components/dropdown';
+import Input from '../../components/input';
 import style from '../style';
+import countriesObj from '../mocks/countries';
 
-const countries = [
-  { value: 'EN-gb', label: 'England', img: 'http://' },
-  { value: 'ES-es', label: 'Spain', img: 'http://' },
-  { value: 'TH-th', label: 'Thailand', img: 'http://', disabled: true },
-  { value: 'EN-en', label: 'USA', img: 'http://' },
-  { value: 'FR-fr', label: 'France', img: 'http://' },
-];
+const countries = Object.keys(countriesObj).map(key => ({
+  label: countriesObj[key],
+  value: key,
+}));
 
 class DropdownTest extends React.Component {
   state = {
-    dropdown4: 'TH-th',
+    dropdown4: 'TH',
+    input: ''
   };
 
   handleChange = (dropdown, value) => {
-    console.log('selected', value);
     const newState = {};
     newState[dropdown] = value;
     this.setState(newState);
   };
 
+  handleInputChange = (value) => {
+    this.setState({
+      input: value,
+    });
+  }
+
   customDropdownItem(data) {
     return (
       <div className={style.dropdownTemplate}>
-        <img className={style.dropdownTemplateImage} src={data.img} />
         <div className={style.dropdownTemplateContent}>
           <strong>{data.label}</strong>
           <small>{data.value}</small>
@@ -73,6 +77,41 @@ class DropdownTest extends React.Component {
           value={this.state.dropdown5}
           required
         />
+
+        <hr />
+        <h5>Dropdown Autocomplete Example</h5>
+        <p>Type a name saved in your browser's autofill entries</p>
+        <form>
+          <Input onChange={this.handleInputChange} value={this.state.input} label="First Name" name="name" autoComplete="name" />
+          <Dropdown
+            label="Country"
+            ref="dropdown6"
+            onChange={this.handleChange.bind(this, 'dropdown6')}
+            source={countries}
+            value={this.state.dropdown6}
+            name="ship-country"
+            autoComplete="country"
+            required
+          />
+        </form>
+
+        <hr />
+        <h5>Dropdown Autocomplete + Template Example</h5>
+        <p>Type a name saved in your browser's autofill entries</p>
+        <form>
+          <Input onChange={this.handleInputChange} value={this.state.input} label="First Name" name="name" autoComplete="name" />
+          <Dropdown
+            label="Country"
+            ref="dropdown6"
+            onChange={this.handleChange.bind(this, 'dropdown6')}
+            source={countries}
+            value={this.state.dropdown6}
+            name="ship-country"
+            autoComplete="country"
+            template={this.customDropdownItem}
+            required
+          />
+        </form>
       </section>
     );
   }
