@@ -176,7 +176,7 @@
   When the combination of a selected template and autocomplete are used, this class is added. The template will render
   and the native input will be visually hidden, but will still be considered visible by the browser leaving the autocomplete intact.
 
-  The !importants are added as a safeguard against inline styles which could override this, pushing other elements round
+  The !importants are added as a safeguard against inline styles which could override this, pushing other elements around
   or accidentally displaying the native input.
 */
 .hideNativeInput {
