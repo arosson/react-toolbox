@@ -97,7 +97,7 @@ class DropdownTest extends React.Component {
 
         <hr />
         <h5>Dropdown Autocomplete + Template Example</h5>
-        <p>Type a name saved in your browser's autofill entries</p>
+        <p>{"Type a name saved in your browser's autofill entries"}</p>
         <form>
           <Input onChange={this.handleInputChange} value={this.state.input} label="First Name" name="name" autoComplete="name" />
           <Dropdown
