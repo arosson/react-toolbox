@@ -13,6 +13,7 @@ exports[`Dropdown should render 1`] = `
     floating={true}
     hint=""
     multiline={false}
+    onChange={[Function]}
     onClick={[Function]}
     readOnly={true}
     required={false}
