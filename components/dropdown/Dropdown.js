@@ -369,15 +369,17 @@ const factory = (Input) => {
           <Input
             {...others}
             tabIndex="0"
-            className={theme.value}
+            className={classnames(theme.value, {
+              [theme.hideInput]: template && selected && autoComplete
+            })}
             autoComplete={autoComplete}
             onClick={this.handleClick}
             onChange={this.handleSelect}
             required={this.props.required}
             readOnly={!autoComplete}
             ref={(node) => { this.inputNode = node && node.getWrappedInstance && node.getWrappedInstance(); }}
-            type={template && selected ? 'hidden' : null}
             theme={theme}
+            type={template && selected && !autoComplete ? 'hidden' : null}
             themeNamespace="input"
             value={selected && selected[labelKey] ? selected[labelKey] : ''}
           />
