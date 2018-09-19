@@ -166,3 +166,24 @@
     width: 0;
   }
 }
+
+/*
+  This deplorable hack exists to trick the browser into considering the native input as visible.
+
+  Use case: When the Dropdown component makes use of the template prop, custom HTML is used instead of the native
+  input to render the selection. The problem with this is the autocomplete will break if the native input is hidden.
+
+  When the combination of a selected template and autocomplete are used, this class is added. The template will render
+  and the native input will be visually hidden, but will still be considered visible by the browser leaving the autocomplete intact.
+
+  The !importants are added as a safeguard against inline styles which could override this, pushing other elements around
+  or accidentally displaying the native input.
+*/
+.hideNativeInput {
+  height: 0 !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
