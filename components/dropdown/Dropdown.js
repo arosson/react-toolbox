@@ -196,7 +196,6 @@ const factory = (Input) => {
           // If the current key pressed is a single character, add it to the typeahead accumulation string
           if (singleCharWord.test(key) || key === ' ') { this.typeaheadAccumulator = this.typeaheadAccumulator + key; }
           // Compare the typeahead string against the option values to find a match. The comparison is done in lower case so matching is not case sensitive
-          // @TODO - Replace indexOf with String.startsWith() when IE support comes along.
           const typeaheadMatchIndex = this.props.source.findIndex(({ label = '' }) => label.toLowerCase().startsWith(this.typeaheadAccumulator.toLowerCase()));
           // If a match is found, use its index as the focused option
           if (typeaheadMatchIndex > -1) { newFocusedItemIndex = typeaheadMatchIndex; }
