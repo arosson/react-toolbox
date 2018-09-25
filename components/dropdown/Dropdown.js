@@ -194,11 +194,12 @@ const factory = (Input) => {
           break;
         default:
           // If the current key pressed is a single character, add it to the typeahead accumulation string
-          if (
-            singleCharWord.test(key)
-            || key === ' '
-            || key === 'Spacebar'
-          ) { this.typeaheadAccumulator = this.typeaheadAccumulator + key; }
+          if (singleCharWord.test(key)) {
+            this.typeaheadAccumulator = this.typeaheadAccumulator + key;
+          // Add space to accumulator to support multi-word search, with support for IE11 or lower key code
+          } else if (key === 'Spacebar' || key === ' ') {
+            this.typeaheadAccumulator = this.typeaheadAccumulator + ' ';
+          }
           // Compare the typeahead string against the option values to find a match. The comparison is done in lower case so matching is not case sensitive
           const typeaheadMatchIndex = this.props.source.findIndex(({ label = '' }) => label.toLowerCase().startsWith(this.typeaheadAccumulator.toLowerCase()));
           // If a match is found, use its index as the focused option
