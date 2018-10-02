@@ -14,6 +14,16 @@ import ownerDocument from 'dom-helpers/ownerDocument';
 const singleCharWord = new RegExp(/\b.\b/); // Matcher for event key codes with a single character
 const typeaheadDebounce = 500; // Clear the buffer this many ms after the user stops typing
 
+/**
+ * Search for a matching label in an array of objects and return it's numeric index
+ * This is used to find the corresponding <option> while typing in the Dropdown component
+ *
+ * @param {String} searchStr
+ * @param {Array} optionList
+ */
+export const getMatchingOptionIndex = (searchStr = '', optionList = []) =>
+optionList.findIndex(({ label = '' }) => label.toLowerCase().startsWith(searchStr.toLowerCase()));
+
 const factory = (Input) => {
   class Dropdown extends Component {
     static propTypes = {
@@ -201,7 +211,7 @@ const factory = (Input) => {
             this.typeaheadAccumulator = this.typeaheadAccumulator + ' ';
           }
           // Compare the typeahead string against the option values to find a match. The comparison is done in lower case so matching is not case sensitive
-          const typeaheadMatchIndex = this.props.source.findIndex(({ label = '' }) => label.toLowerCase().startsWith(this.typeaheadAccumulator.toLowerCase()));
+          const typeaheadMatchIndex = getMatchingOptionIndex(this.typeaheadAccumulator, source);
           // If a match is found, use its index as the focused option
           if (typeaheadMatchIndex > -1) { newFocusedItemIndex = typeaheadMatchIndex; }
         }
