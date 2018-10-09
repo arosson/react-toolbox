@@ -31,6 +31,7 @@ const factory = (MenuItem) => {
       ripple: PropTypes.bool,
       selectable: PropTypes.bool,
       selected: PropTypes.node,
+      tabIndex: PropTypes.string,
       theme: PropTypes.shape({
         active: PropTypes.string,
         bottomLeft: PropTypes.string,
@@ -213,7 +214,7 @@ const factory = (MenuItem) => {
     }
 
     render() {
-      const { theme } = this.props;
+      const { theme, tabIndex } = this.props;
       const outlineStyle = { width: this.state.width, height: this.state.height };
       const className = classnames([theme.menu, theme[this.state.position]], {
         [theme.active]: this.state.active,
@@ -221,7 +222,7 @@ const factory = (MenuItem) => {
       }, this.props.className);
 
       return (
-        <div data-react-toolbox="menu" className={className} style={this.getRootStyle()}>
+        <div data-react-toolbox="menu" className={className} style={this.getRootStyle()} tabIndex={tabIndex}>
           {this.props.outline ? <div className={theme.outline} style={outlineStyle} /> : null}
           <ul
             ref={(node) => { this.menuNode = node; }}
