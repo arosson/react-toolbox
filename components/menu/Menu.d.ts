@@ -91,6 +91,10 @@ export interface MenuProps extends ReactToolbox.Props {
    */
   selected?: any;
   /**
+   * Used to set the tabindex of the root selector.
+   */
+  tabIndex?: string;
+  /**
    * Classnames object defining the component style.
    */
   theme?: MenuTheme;
