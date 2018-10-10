@@ -176,25 +176,14 @@ const factory = (Input) => {
 
       switch (key) {
         case 'ArrowUp':
-        newFocusedItemIndex = previousItemIndex;
-        break;
+          newFocusedItemIndex = previousItemIndex;
+          break;
         case 'ArrowDown':
-        newFocusedItemIndex = nextItemIndex;
-        break;
+          newFocusedItemIndex = nextItemIndex;
+          break;
         case 'Tab':
-          if (event.shiftKey) {
-            if (focusedItemIndex === 0) {
-              // No-op: Allow default behavior which should take the focus out of the menu
-            } else {
-              newFocusedItemIndex = previousItemIndex;
-            }
-          } else {
-            if (focusedItemIndex === lastItemIndex) {
-              // No-op: Allow default behavior which should take the focus out of the menu
-            } else {
-              newFocusedItemIndex = nextItemIndex;
-            }
-          }
+          // Allow the browser to take the user to the next form input instead of cycling
+          // through all the items in the dropdown.
           break;
         case 'Enter':
           !currentItem.disabled && this.handleSelect(currentItem[valueKey], event);
