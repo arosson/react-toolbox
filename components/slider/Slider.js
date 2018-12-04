@@ -8,6 +8,37 @@ import { SLIDER } from '../identifiers';
 import events from '../utils/events';
 import InjectProgressBar from '../progress_bar/ProgressBar';
 import InjectInput from '../input/Input';
+import Knob from './Knob';
+
+/**
+ * Get index of the nearest handle in an array of handle positions
+ * @param {Number} requestedPosition
+ * @param {Array/Number} propsValue
+ */
+export const getNearestHandleIndex = (requestedPosition, propsValue) => {
+  const nearestValue = propsValue.reduce((prev, curr) =>
+    (Math.abs(curr - requestedPosition) < Math.abs(prev - requestedPosition) ? curr : prev),
+  );
+  return propsValue.findIndex(val => val === nearestValue);
+};
+
+/**
+ * Format an input value, applying the value to an array if in range-mode
+ * @param {Number} currentValueIndex
+ * @param {String} newValue
+ * @param {Array/Number} propsValue
+ */
+export const getFormattedValue = (currentValueIndex, newValue, propsValue) => {
+  let value = newValue;
+
+  if (Array.isArray(propsValue)) {
+    const valueArray = [...propsValue];
+    valueArray[currentValueIndex] = newValue;
+    value = valueArray;
+  }
+
+  return value;
+};
 
 const factory = (ProgressBar, Input) => {
   class Slider extends Component {
@@ -41,7 +72,7 @@ const factory = (ProgressBar, Input) => {
         snap: PropTypes.string,
         snaps: PropTypes.string,
       }),
-      value: PropTypes.number,
+      value: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
     };
 
     static defaultProps = {
@@ -56,6 +87,7 @@ const factory = (ProgressBar, Input) => {
       snaps: false,
       step: 0.01,
       value: 0,
+      onChange: () => {},
     };
 
     state = {
@@ -63,17 +95,13 @@ const factory = (ProgressBar, Input) => {
       inputValue: null,
       sliderLength: 0,
       sliderStart: 0,
+      pressed: false,
+      selectedValueIndex: null,
     };
 
     componentDidMount() {
       window.addEventListener('resize', this.handleResize);
       this.handleResize();
-    }
-
-    componentWillReceiveProps(nextProps) {
-      if (this.state.inputFocused && this.props.value !== nextProps.value) {
-        this.setState({ inputValue: this.valueForInput(nextProps.value) });
-      }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -98,9 +126,25 @@ const factory = (ProgressBar, Input) => {
     }
 
     getInput() {
-      return this.inputNode && this.inputNode.getWrappedInstance
-        ? this.inputNode.getWrappedInstance()
-        : this.inputNode;
+      const { selectedValueIndex } = this.state;
+      const { inputNode } = typeof selectedValueIndex === 'number' ? this.inputRefs[selectedValueIndex] : this.inputNode;
+      return inputNode;
+    }
+
+    getInputValue(targetValueIndex) {
+      const { inputFocused, inputValue } = this.state;
+      const { value } = this.props;
+      let newInputValue;
+
+      if (inputFocused) {
+        newInputValue = Array.isArray(inputValue) ? inputValue[targetValueIndex] : inputValue;
+      } else {
+        newInputValue = (typeof targetValueIndex === 'number')
+          ? value[targetValueIndex]
+          : this.valueForInput(value);
+      }
+
+      return newInputValue;
     }
 
     getKeyboardEvents() {
@@ -123,28 +167,66 @@ const factory = (ProgressBar, Input) => {
       };
     }
 
+    // Create an array with null values, to be filled with refs if in range mode
+    inputRefs = Array.isArray(this.props.value) ? this.props.value.map(() => null) : [];
+
     addToValue(increment) {
-      let value = this.state.inputFocused ? parseFloat(this.state.inputValue) : this.props.value;
-      value = this.trimValue(value + increment);
-      if (value !== this.props.value) this.props.onChange(value);
+      const { selectedValueIndex } = this.state;
+      const propsValue = this.props.value;
+      const rangeMode = (Array.isArray(this.state.inputValue) && typeof selectedValueIndex === 'number');
+      const stateInputValue = this.state.inputFocused
+      ? parseFloat(rangeMode ? propsValue[selectedValueIndex] : propsValue)
+      : propsValue;
+      const valueToTrim = stateInputValue + increment;
+      const trimmedValue = rangeMode
+        ? this.trimValue(valueToTrim, selectedValueIndex)
+        : this.trimValue(valueToTrim);
+      const formattedValue = getFormattedValue(selectedValueIndex, trimmedValue, propsValue);
+
+      this.setState({ inputValue: formattedValue });
+      this.props.onChange(formattedValue);
     }
 
-    handleInputFocus = () => {
+    handleInputFocus = (targetValueIndex) => {
+      const { value: propsValue } = this.props;
+      const newValue = this.valueForInput(propsValue);
+      const inputValue = getFormattedValue(targetValueIndex, newValue, propsValue);
+
       this.setState({
         inputFocused: true,
-        inputValue: this.valueForInput(this.props.value),
+        inputValue,
+        ...(typeof targetValueIndex === 'number' && { selectedValueIndex: targetValueIndex }),
       });
     };
 
-    handleInputChange = (value) => {
-      this.setState({ inputValue: value });
+    handleInputChange = (newValue = '', targetValueIndex) => {
+      const propsValue = this.props.value;
+      const inputValue = getFormattedValue(targetValueIndex, newValue, propsValue);
+      this.setState({ inputValue });
     };
 
-    handleInputBlur = (event) => {
-      const value = this.state.inputValue || 0;
-      this.setState({ inputFocused: false, inputValue: null }, () => {
-        this.props.onChange(this.trimValue(value), event);
-      });
+    handleInputBlur = (event, targetValueIndex) => {
+      const { value: propsValue } = this.props;
+      const { inputValue } = this.state;
+      const trimmedValue = (Array.isArray(inputValue) && typeof targetValueIndex === 'number')
+        ? this.trimValue(inputValue[targetValueIndex], targetValueIndex)
+        : this.trimValue(inputValue);
+      const newValue = getFormattedValue(targetValueIndex, trimmedValue, propsValue);
+
+      this.setState(
+        // Reset the input state
+        { inputFocused: false, inputValue: null, selectedValueIndex: null },
+        () => {
+          if (
+            // Is either a valid single or range value
+            (!isNaN(newValue) && newValue !== '')
+            || (Array.isArray(newValue) && !isNaN(newValue[targetValueIndex]))
+          ) {
+            // Call the onChange callback with the new value
+            this.props.onChange(newValue, event);
+          }
+        },
+      );
     };
 
     handleKeyDown = (event) => {
@@ -153,12 +235,31 @@ const factory = (ProgressBar, Input) => {
       if (event.keyCode === 40) this.addToValue(-this.props.step);
     };
 
-    handleMouseDown = (event) => {
+    handleMouseDown = (event, selectedValueIndex) => {
+      if (typeof selectedValueIndex === 'number') this.setState({ selectedValueIndex });
       if (this.state.inputFocused) this.getInput().blur();
       events.addEventsToDocument(this.getMouseEventMap());
-      this.start(events.getMousePosition(event));
+      this.start(events.getMousePosition(event), selectedValueIndex);
       events.pauseEvent(event);
     };
+
+    /**
+     * When in range mode, this event handler will find the nearest handle and select it
+     * before invoking the mouseDown/touchStart handler
+     *
+     * @memberof Slider
+     */
+    handleRangeClick = (event, type) => {
+      const position = type === 'touch' ? events.getTouchPosition(event) : events.getMousePosition(event);
+      const nearestIndex = getNearestHandleIndex(this.positionToValue(position), this.props.value);
+
+      // Invoke the touch or mouse event handler
+      if (type === 'touch') {
+        this.handleTouchStart(event, nearestIndex);
+      } else {
+        this.handleMouseDown(event, nearestIndex);
+      }
+    }
 
     handleMouseMove = (event) => {
       events.pauseEvent(event);
@@ -191,7 +292,8 @@ const factory = (ProgressBar, Input) => {
       this.move(events.getTouchPosition(event));
     };
 
-    handleTouchStart = (event) => {
+    handleTouchStart = (event, selectedValueIndex) => {
+      if (typeof selectedValueIndex === 'number') this.setState({ selectedValueIndex });
       if (this.state.inputFocused) this.getInput().blur();
       this.start(events.getTouchPosition(event));
       events.addEventsToDocument(this.getTouchEventMap());
@@ -203,14 +305,24 @@ const factory = (ProgressBar, Input) => {
       this.setState({ pressed: false });
     }
 
-    knobOffset() {
+    knobOffset(valueIndex) {
       const { max, min, value } = this.props;
-      return 100 * ((value - min) / (max - min));
+      const currentValue = value.length > 0 ? value[valueIndex] : value;
+      return 100 * ((currentValue - min) / (max - min));
     }
 
     move(position) {
+      const { value: propsValue } = this.props;
+      const { selectedValueIndex } = this.state;
+      const rangeMode = (Array.isArray(propsValue) && typeof selectedValueIndex === 'number');
       const newValue = this.positionToValue(position);
-      if (newValue !== this.props.value) this.props.onChange(newValue);
+      const trimmedValue = rangeMode
+      ? this.trimValue(newValue, selectedValueIndex)
+      : this.trimValue(newValue);
+
+      this.props.onChange(
+        getFormattedValue(selectedValueIndex, trimmedValue, propsValue),
+      );
     }
 
     positionToValue(position) {
@@ -220,10 +332,19 @@ const factory = (ProgressBar, Input) => {
       return this.trimValue((Math.round(pos / step) * step) + min);
     }
 
-    start(position) {
+    start(position, selectedValueIndex) {
       this.handleResize(null, () => {
-        this.setState({ pressed: true });
-        this.props.onChange(this.positionToValue(position));
+        const { value: propsValue } = this.props;
+        const rangeMode = (Array.isArray(propsValue) && typeof selectedValueIndex === 'number');
+        const newValue = this.positionToValue(position);
+        const trimmedValue = rangeMode
+        ? this.trimValue(newValue, selectedValueIndex)
+        : this.trimValue(newValue);
+
+        this.props.onChange(
+          getFormattedValue(selectedValueIndex, trimmedValue, propsValue),
+        );
+        this.setState({ pressed: typeof selectedValueIndex === 'number' ? selectedValueIndex : true });
       });
     }
 
@@ -231,15 +352,33 @@ const factory = (ProgressBar, Input) => {
       return (this.props.step.toString().split('.')[1] || []).length;
     }
 
-    trimValue(value) {
-      if (value < this.props.min) return this.props.min;
-      if (value > this.props.max) return this.props.max;
-      return round(value, this.stepDecimals());
+    trimValue(inputValue, targetValueIndex) {
+      const rangeMode = typeof targetValueIndex === 'number';
+      const { value: propsValue } = this.props;
+      let { min, max } = this.props;
+      let value = inputValue;
+
+      if (rangeMode) {
+        const lowerBoundary = propsValue[targetValueIndex - 1];
+        const upperBoundary = propsValue[targetValueIndex + 1];
+        min = lowerBoundary || min;
+        max = upperBoundary || max;
+      }
+
+      if (value < min) {
+        value = min;
+      } else if (value > max) {
+        value = max;
+      } else {
+        value = round(value, this.stepDecimals());
+      }
+      return value;
     }
 
     valueForInput(value) {
+      const currentValue = value.length ? value[0] : value;
       const decimals = this.stepDecimals();
-      return decimals > 0 ? value.toFixed(decimals) : value.toString();
+      return decimals > 0 ? currentValue.toFixed(decimals) : currentValue.toString();
     }
 
     renderSnaps() {
@@ -253,32 +392,63 @@ const factory = (ProgressBar, Input) => {
       );
     }
 
-    renderInput() {
+    renderInput(targetValueIndex) {
       if (!this.props.editable) return undefined;
+      const isRangeMode = Array.isArray(this.props.value) && typeof targetValueIndex === 'number';
+
       return (
         <Input
-          ref={(node) => { this.inputNode = node; }}
+          key={`sliderInput-${targetValueIndex || 0}`}
+          ref={(node) => {
+            if (isRangeMode) {
+              this.inputRefs[targetValueIndex] = node;
+            } else {
+              this.inputNode = node;
+            }
+          }}
           className={this.props.theme.input}
           disabled={this.props.disabled}
-          onFocus={this.handleInputFocus}
-          onChange={this.handleInputChange}
-          onBlur={this.handleInputBlur}
-          value={this.state.inputFocused
-            ? this.state.inputValue
-            : this.valueForInput(this.props.value)}
+          onFocus={isRangeMode
+            ? () => this.handleInputFocus(targetValueIndex)
+            : this.handleInputFocus
+          }
+          onChange={isRangeMode
+            ? val => this.handleInputChange(val, targetValueIndex)
+            : val => this.handleInputChange(val)
+          }
+          onBlur={isRangeMode
+            ? e => this.handleInputBlur(e, targetValueIndex)
+            : e => this.handleInputBlur(e)
+          }
+          value={this.getInputValue(targetValueIndex)}
+        />
+      );
+    }
+
+    renderKnob(index) {
+      const { theme, value } = this.props;
+      const { pressed } = this.state;
+      const isRange = typeof index === 'number';
+      return (
+        <Knob
+          key={index}
+          theme={theme}
+          pressed={isRange ? pressed === index : pressed}
+          leftOffsetValue={this.knobOffset(index)}
+          onMouseDown={isRange ? e => this.handleMouseDown(e, index) : this.handleMouseDown}
+          onTouchStart={isRange ? e => this.handleTouchStart(e, index) : this.handleTouchStart}
+          value={isRange ? value[index] : value}
         />
       );
     }
 
     render() {
-      const { theme } = this.props;
-      const knobStyles = { left: `${this.knobOffset()}%` };
+      const { theme, value, min, max } = this.props;
       const className = classnames(theme.slider, {
         [theme.editable]: this.props.editable,
         [theme.disabled]: this.props.disabled,
         [theme.pinned]: this.props.pinned,
-        [theme.pressed]: this.state.pressed,
-        [theme.ring]: this.props.value === this.props.min,
+        [theme.ring]: value === min,
       }, this.props.className);
 
       return (
@@ -294,35 +464,33 @@ const factory = (ProgressBar, Input) => {
           <div
             ref={(node) => { this.sliderNode = node; }}
             className={theme.container}
-            onMouseDown={this.handleMouseDown}
-            onTouchStart={this.handleTouchStart}
+            onMouseDown={Array.isArray(value) ? this.handleRangeClick : this.handleMouseDown}
+            onTouchStart={Array.isArray(value) ? event => this.handleRangeClick(event, 'touch') : this.handleTouchStart}
           >
-            <div
-              ref={(node) => { this.knobNode = node; }}
-              className={theme.knob}
-              onMouseDown={this.handleMouseDown}
-              onTouchStart={this.handleTouchStart}
-              style={knobStyles}
-            >
-              <div className={theme.innerknob} data-value={parseInt(this.props.value, 10)} />
-            </div>
-
             <div className={theme.progress}>
               <ProgressBar
                 disabled={this.props.disabled}
                 ref={(node) => { this.progressbarNode = node; }}
                 className={theme.innerprogress}
-                max={this.props.max}
-                min={this.props.min}
+                max={max}
+                min={min}
                 mode="determinate"
-                value={this.props.value}
+                value={value}
                 buffer={this.props.buffer}
               />
               {this.renderSnaps()}
             </div>
+            {
+              Array.isArray(value)
+              ? value.map((_, index) => this.renderKnob(index))
+              : this.renderKnob()
+            }
           </div>
-
-          {this.renderInput()}
+          {
+            Array.isArray(value)
+            ? value.map((_, index) => this.renderInput(index))
+            : this.renderInput()
+          }
         </div>
       );
     }

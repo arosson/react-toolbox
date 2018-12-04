@@ -2,7 +2,7 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { Input } from '../../input/Input';
 import { ProgressBar } from '../../progress_bar/ProgressBar';
-import { Slider } from '../Slider';
+import { Slider, getNearestHandleIndex, getFormattedValue } from '../Slider';
 import theme from '../theme.css';
 
 describe('Slider', () => {
@@ -158,4 +158,58 @@ describe('Slider', () => {
       expect(onChange).toHaveBeenCalled();
     });
   });
+  describe('#getNearestHandleIndex', () => {
+    it('returns index of 0 is requested position is lower than the value of first handle', () => {
+      const valueArray = [2, 4, 6];
+      const result = getNearestHandleIndex(1, valueArray);
+      expect(result).toEqual(0);
+    });
+    it('returns index of 0 is requested position is equal to the value of first handle', () => {
+      const valueArray = [2, 4, 6];
+      const result = getNearestHandleIndex(2, valueArray);
+      expect(result).toEqual(0);
+    });
+    it('returns index of 0 is requested position is nearest the value of first handle', () => {
+      const valueArray = [2, 4, 6];
+      const result = getNearestHandleIndex(2.99, valueArray);
+      expect(result).toEqual(0);
+    });
+    it('returns index of 1 is requested position is nearest the value of second handle', () => {
+      const valueArray = [2, 4, 6];
+      const result = getNearestHandleIndex(3.01, valueArray);
+      expect(result).toEqual(1);
+    });
+    it('returns index of 1 is requested position is equal to the value of second handle', () => {
+      const valueArray = [2, 4, 6];
+      const result = getNearestHandleIndex(4, valueArray);
+      expect(result).toEqual(1);
+    });
+    it('returns index of 2 is requested position is nearest the value of third handle', () => {
+      const valueArray = [2, 4, 6];
+      const result = getNearestHandleIndex(5.01, valueArray);
+      expect(result).toEqual(2);
+    });
+    it('returns index of 2 is requested position is equal to the value of third handle', () => {
+      const valueArray = [2, 4, 6];
+      const result = getNearestHandleIndex(6, valueArray);
+      expect(result).toEqual(2);
+    });
+    it('returns index of 2 is requested position is greater than the value of third handle', () => {
+      const valueArray = [2, 4, 6];
+      const result = getNearestHandleIndex(8, valueArray);
+      expect(result).toEqual(2);
+    });
+  });
+  describe('#getFormattedValue', () => {
+    it('should return new single value if in non-range mode', () => {
+      const result = getFormattedValue(null, 4, 6);
+      expect(result).toEqual(4);
+    });
+    it('should return updated array if in range mode', () => {
+      const valueArray = [2, 4, 6];
+      const result = getFormattedValue(0, 3, valueArray);
+      expect(result).toEqual([3, 4, 6]);
+    });
+  });
 });
+

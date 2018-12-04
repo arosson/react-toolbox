@@ -27,7 +27,10 @@ class ProgressBar extends Component {
       value: PropTypes.string,
     }),
     type: PropTypes.oneOf(['linear', 'circular']),
-    value: PropTypes.number,
+    value: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.arrayOf(PropTypes.number),
+    ]),
   };
 
   static defaultProps = {
@@ -81,6 +84,27 @@ class ProgressBar extends Component {
     );
   }
 
+  renderRange() {
+    const { value, theme } = this.props;
+    const rangeStyle = prefixer({
+      transform: `translateX(${this.calculateRatio(value[0]) * 100}%)
+                  scaleX(${this.calculateRatio(value[value.length - 1] - value[0])})`,
+    });
+    return (
+      <span data-ref="value" className={theme.value} style={rangeStyle} />
+    );
+  }
+
+  renderInner() {
+    if (this.props.type === 'circular') {
+      return this.renderCircular();
+    }
+    if (Array.isArray(this.props.value)) {
+      return this.renderRange();
+    }
+    return this.renderLinear();
+  }
+
   render() {
     const { className, disabled, max, min, mode, multicolor, type, theme, value } = this.props;
     const _className = classnames(theme[type], {
@@ -97,7 +121,7 @@ class ProgressBar extends Component {
         aria-valuemax={max}
         className={_className}
       >
-        {type === 'circular' ? this.renderCircular() : this.renderLinear()}
+        {this.renderInner()}
       </div>
     );
   }
