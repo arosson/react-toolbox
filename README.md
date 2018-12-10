@@ -303,7 +303,7 @@ Form generation and validation using React-Toolbox form widgets - [mobx-schema-f
 
 ## Publishing Releases
 
-react-toolbox is not hooked up to Jenkins to do builds so at the moment they have to be done manually via `npm`.
+react-toolbox is not hooked up to Jenkins to do release builds so at the moment they have to be done manually via `npm`.
 
 To publish a new tagged release:
 * `npm version versionNumber`
