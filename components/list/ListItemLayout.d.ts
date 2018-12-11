@@ -26,7 +26,7 @@ export interface ListItemLayoutProps extends ReactToolbox.Props {
   /**
    * Main text of the item.
    */
-  caption?: string;
+  caption?: string | React.ReactNode;
     /**
    * Children to pass through the component.
    */
