@@ -43,7 +43,10 @@ const factory = (Avatar, ListItemContent, ListItemActions) => {
       PropTypes.string,
       PropTypes.element,
     ]),
-    caption: PropTypes.string,
+    caption: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.node,
+    ]),
     className: PropTypes.string,
     disabled: PropTypes.bool,
     itemContent: PropTypes.element,

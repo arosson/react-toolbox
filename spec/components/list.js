@@ -126,6 +126,12 @@ class ListTest extends React.Component {
               caption="Tobias Van Schneider"
               rightIcon="mail"
             />
+            <ListItem
+              caption={(
+                <Avatar style={{backgroundColor: 'deepskyblue'}} icon="folder" />
+              )}
+              rightIcon="mail"
+            />
           </List>
         </div>
 
