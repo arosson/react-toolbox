@@ -23,12 +23,12 @@ const factory = (MenuItem) => {
       active: PropTypes.bool,
       children: PropTypes.node,
       className: PropTypes.string,
-      containerRef: PropTypes.oneOfType([PropTypes.node, PropTypes.object]),
       onClickOutside: PropTypes.func,
       onHide: PropTypes.func,
       onSelect: PropTypes.func,
       onShow: PropTypes.func,
       outline: PropTypes.bool,
+      parentContainerRef: PropTypes.oneOfType([PropTypes.node, PropTypes.object]),
       position: PropTypes.oneOf(Object.keys(POSITION).map(key => POSITION[key])),
       ripple: PropTypes.bool,
       selectable: PropTypes.bool,
@@ -50,8 +50,8 @@ const factory = (MenuItem) => {
 
     static defaultProps = {
       active: false,
-      containerRef: null,
       outline: true,
+      parentContainerRef: null,
       position: POSITION.STATIC,
       ripple: true,
       selectable: true,
@@ -177,7 +177,7 @@ const factory = (MenuItem) => {
     }
 
     handleDocumentClick = (event) => {
-      const refNode = this.props.containerRef || ReactDOM.findDOMNode(this);
+      const refNode = this.props.parentContainerRef || ReactDOM.findDOMNode(this);
       if (this.state.active && !events.targetIsDescendant(event, refNode)) {
         this.setState({ active: false, rippled: false }, () => {
           if (this.props.onClickOutside) this.props.onClickOutside();

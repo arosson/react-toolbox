@@ -33,7 +33,7 @@ class HoverMenu extends React.Component {
         className={style.hoverMenuContainer}
       >
         <Button raised primary>Hover over me!</Button>
-        <Menu tabIndex="0" active={this.state.menuActive} position="topLeft" containerRef={this.ref} className={style.menu}>
+        <Menu tabIndex="0" active={this.state.menuActive} position="topLeft" parentContainerRef={this.ref} className={style.menu}>
           <MenuItem value="foo" caption="Caption" />
           <MenuDivider />
           <MenuItem caption="Caption & Icon" icon="phone" />
