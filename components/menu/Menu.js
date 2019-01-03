@@ -23,7 +23,7 @@ const factory = (MenuItem) => {
       active: PropTypes.bool,
       children: PropTypes.node,
       className: PropTypes.string,
-      containerRef: PropTypes.node,
+      containerRef: PropTypes.oneOfType([PropTypes.node, PropTypes.object]),
       onClickOutside: PropTypes.func,
       onHide: PropTypes.func,
       onSelect: PropTypes.func,
@@ -177,8 +177,8 @@ const factory = (MenuItem) => {
     }
 
     handleDocumentClick = (event) => {
-      const refNode = this.props.containerRef || this;
-      if (this.state.active && !events.targetIsDescendant(event, ReactDOM.findDOMNode(refNode))) {
+      const refNode = this.props.containerRef || ReactDOM.findDOMNode(this);
+      if (this.state.active && !events.targetIsDescendant(event, refNode)) {
         this.setState({ active: false, rippled: false }, () => {
           if (this.props.onClickOutside) this.props.onClickOutside();
         });

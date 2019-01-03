@@ -194,7 +194,7 @@ body {
 .hoverMenuContainer {
   position: relative;
 
-  & .menu {
+  & .menu.menu {
     top: 40px;
   }
 }
