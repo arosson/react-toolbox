@@ -13,11 +13,9 @@ class HoverMenu extends React.Component {
   }
 
   onMouseEnter = () => {
-    if (true) {
-      this.setState({
-        menuActive: true,
-      });
-    }
+    this.setState({
+      menuActive: true,
+    });
   };
 
   onMouseLeave = () => {
