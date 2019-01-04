@@ -28,7 +28,7 @@ const factory = (MenuItem) => {
       onSelect: PropTypes.func,
       onShow: PropTypes.func,
       outline: PropTypes.bool,
-      parentContainerRef: PropTypes.oneOfType([PropTypes.node, PropTypes.object]),
+      parentContainerRef: PropTypes.object, // eslint-disable-line react/forbid-prop-types
       position: PropTypes.oneOf(Object.keys(POSITION).map(key => POSITION[key])),
       ripple: PropTypes.bool,
       selectable: PropTypes.bool,
