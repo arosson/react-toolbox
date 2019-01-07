@@ -28,6 +28,7 @@ const factory = (MenuItem) => {
       onSelect: PropTypes.func,
       onShow: PropTypes.func,
       outline: PropTypes.bool,
+      parentContainerRef: PropTypes.object, // eslint-disable-line react/forbid-prop-types
       position: PropTypes.oneOf(Object.keys(POSITION).map(key => POSITION[key])),
       ripple: PropTypes.bool,
       selectable: PropTypes.bool,
@@ -50,6 +51,7 @@ const factory = (MenuItem) => {
     static defaultProps = {
       active: false,
       outline: true,
+      parentContainerRef: null,
       position: POSITION.STATIC,
       ripple: true,
       selectable: true,
@@ -175,7 +177,8 @@ const factory = (MenuItem) => {
     }
 
     handleDocumentClick = (event) => {
-      if (this.state.active && !events.targetIsDescendant(event, ReactDOM.findDOMNode(this))) {
+      const refNode = this.props.parentContainerRef || ReactDOM.findDOMNode(this);
+      if (this.state.active && !events.targetIsDescendant(event, refNode)) {
         this.setState({ active: false, rippled: false }, () => {
           if (this.props.onClickOutside) this.props.onClickOutside();
         });
