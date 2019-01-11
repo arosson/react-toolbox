@@ -47,7 +47,7 @@
 
 .topNavigation {
   flex-grow: 0;
-  padding: $dialog-navigation-padding;
+  padding: var(--dialog-navigation-padding);
 }
 
 .small {
