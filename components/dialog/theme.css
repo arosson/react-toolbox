@@ -16,12 +16,12 @@
   @apply --reset;
 }
 
-.dialog {
-  background-color: var(--dialog-color-white);
-  border-radius: var(--dialog-border-radius);
-  box-shadow: var(--zdepth-shadow-5);
-  display: flex;
+.container {
   flex-direction: column;
+}
+
+.dialog {
+  display: flex;
   max-height: 96vh;
   max-width: 96vw;
   opacity: 0;
@@ -36,6 +36,18 @@
     opacity: 1;
     transform: translateY(0%);
   }
+}
+
+.dialogContent {
+  background-color: var(--dialog-color-white);
+  border-radius: var(--dialog-border-radius);
+  box-shadow: var(--zdepth-shadow-5);
+  flex-direction: column;
+}
+
+.topNavigation {
+  flex-grow: 0;
+  padding: $dialog-navigation-padding;
 }
 
 .small {
