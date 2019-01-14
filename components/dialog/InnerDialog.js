@@ -13,9 +13,9 @@ const factory = (Button) => {
       return <Button key={idx} {...action} className={className} />; // eslint-disable-line
     });
 
-    const overlayTopActions = props.overlayTopActions.map((action, idx) => {
+    const overlayTopActions = props.overlayTopActions.map((action) => {
       const className = classnames(props.theme.button, { [action.className]: action.className });
-      return <Button key={idx} {...action} className={className} />; // eslint-disable-line
+      return <Button key={action.label || action.icon} {...action} className={className} />;
     });
 
     const className = classnames([props.theme.dialog,
@@ -65,7 +65,7 @@ const factory = (Button) => {
     overlayTopActions: PropTypes.arrayOf(PropTypes.shape({
       className: PropTypes.string,
       label: PropTypes.string,
-      children: PropTypes.node,
+      icon: PropTypes.string,
     })),
     theme: PropTypes.shape({
       active: PropTypes.string,
