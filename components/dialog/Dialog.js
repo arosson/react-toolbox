@@ -55,7 +55,7 @@ const factory = (Overlay, Button) => {
     overlayTopActions: PropTypes.arrayOf(PropTypes.shape({
       className: PropTypes.string,
       label: PropTypes.string,
-      children: PropTypes.node,
+      icon: PropTypes.string,
     })),
     theme: PropTypes.shape({
       active: PropTypes.string,
