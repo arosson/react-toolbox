@@ -11,7 +11,7 @@ import { innerDialogFactory } from './InnerDialog';
 
 const factory = (Overlay, Button) => {
   const InnerDialog = themr(INNER_DIALOG)(innerDialogFactory(Button));
-  const Dialog = props => (
+  const Dialog = props => console.log(props.overlayTopActions) || (
     <Portal className={props.theme.wrapper}>
       <Overlay
         active={props.active}

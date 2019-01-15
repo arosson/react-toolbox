@@ -19,26 +19,19 @@ const factory = (Button) => {
     });
 
     const className = classnames([props.theme.dialog,
-      props.theme.dialogContent,
       props.theme[props.type]], {
         [props.theme.active]: props.active,
       }, props.className);
 
     return (
-      <div className={props.theme.container}>
+      <div data-react-toolbox="dialog" className={className}>
         {overlayTopActions.length
-          ? <div
-            className={classnames([props.theme.dialog,
-              props.theme.topNavigation,
-              props.theme[props.type]], {
-                [props.theme.active]: props.active,
-              })}
-          >
+          ? <div className={props.theme.topNavigation} >
             {overlayTopActions}
           </div>
           : null
         }
-        <div data-react-toolbox="dialog" className={className}>
+        <div className={props.theme.dialogContent}>
           <section role="body" className={props.theme.body}>
             {props.title ? <h6 className={props.theme.title}>{props.title}</h6> : null}
             {props.children}

@@ -16,12 +16,9 @@
   @apply --reset;
 }
 
-.container {
-  flex-direction: column;
-}
-
 .dialog {
   display: flex;
+  flex-direction: column;
   max-height: 96vh;
   max-width: 96vw;
   opacity: 0;
@@ -43,6 +40,7 @@
   border-radius: var(--dialog-border-radius);
   box-shadow: var(--zdepth-shadow-5);
   flex-direction: column;
+  position: relative;
 }
 
 .topNavigation {
