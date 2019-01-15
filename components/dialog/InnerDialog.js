@@ -27,7 +27,7 @@ const factory = (Button) => {
     return (
       <div className={props.theme.container}>
         {overlayTopActions.length
-          ? <nav
+          ? <div
             className={classnames([props.theme.dialog,
               props.theme.topNavigation,
               props.theme[props.type]], {
@@ -35,7 +35,7 @@ const factory = (Button) => {
               })}
           >
             {overlayTopActions}
-          </nav>
+          </div>
           : null
         }
         <div data-react-toolbox="dialog" className={className}>
