@@ -17,12 +17,18 @@ const POSITION = {
   BOTTOM_RIGHT: 'bottomRight',
 };
 
+const DOWN = 'ArrowDown';
+const UP = 'ArrowUp';
+const ESC = 'Escape';
+const TAB = 'Tab';
+
 const factory = (MenuItem) => {
   class Menu extends Component {
     static propTypes = {
       active: PropTypes.bool,
       children: PropTypes.node,
       className: PropTypes.string,
+      linkRef: PropTypes.func,
       onClickOutside: PropTypes.func,
       onHide: PropTypes.func,
       onSelect: PropTypes.func,
@@ -50,6 +56,7 @@ const factory = (MenuItem) => {
 
     static defaultProps = {
       active: false,
+      linkRef: null,
       outline: true,
       parentContainerRef: null,
       position: POSITION.STATIC,
@@ -60,7 +67,7 @@ const factory = (MenuItem) => {
     state = {
       active: this.props.active,
       rippled: false,
-      cursorIndex: undefined,
+      selectedIndex: -1,
     };
 
     componentDidMount() {
@@ -142,68 +149,6 @@ const factory = (MenuItem) => {
       clearTimeout(this.activateTimeoutHandle);
     }
 
-    onArrowDown = () => {
-      const { children } = this.props;
-      const { active, cursorIndex } = this.state;
-      const nextState = {};
-
-      if (!active) {
-        nextState.active = true;
-        nextState.cursorIndex = 0;
-      } else if (cursorIndex + 1 > children.length - 1) {
-        nextState.cursorIndex = 0;
-      } else {
-        let nextIndex = cursorIndex + 1;
-        const nextChild = children[nextIndex];
-
-        if (!nextChild) {
-          return;
-        }
-
-        if (this.isMenuDivider(nextChild)) {
-          nextIndex += 1;
-        }
-
-        nextState.cursorIndex = nextIndex;
-      }
-      this.focusOnCurrentElement(nextState.cursorIndex);
-
-      this.setState({
-        ...nextState,
-      });
-    };
-
-    onArrowUp = () => {
-      const { children } = this.props;
-      const { active, cursorIndex } = this.state;
-      const nextState = {};
-
-      if (!active) {
-        nextState.active = true;
-        nextState.cursorIndex = children.length - 1;
-      } else if (cursorIndex - 1 < 0) {
-        nextState.cursorIndex = children.length - 1;
-      } else {
-        let nextIndex = cursorIndex - 1;
-        const nextChild = children[nextIndex];
-
-        if (!nextChild) {
-          return;
-        }
-
-        if (this.isMenuDivider(nextChild)) {
-          nextIndex -= 1;
-        }
-
-        nextState.cursorIndex = nextIndex;
-      }
-      this.focusOnCurrentElement(nextState.cursorIndex);
-
-      this.setState({
-        ...nextState,
-      });
-    };
-
     getMenuStyle() {
       const { width, height, position } = this.state;
       if (position !== POSITION.STATIC) {
@@ -259,6 +204,32 @@ const factory = (MenuItem) => {
 
     childRefs = [];
 
+    nextSuggestion = (direction = DOWN) => {
+      const { children } = this.props;
+      const { active, selectedIndex } = this.state;
+      const nextState = {};
+      const offset = direction === DOWN ? 1 : -1;
+      let nextIndex = selectedIndex + offset;
+
+      // Open the menu when we hit arrow up or down
+      if (!active) {
+        nextState.active = true;
+      }
+
+      if (nextIndex > children.length - 1) {
+        nextIndex = 0;
+      } else if (nextIndex < 0) {
+        nextIndex = children.length - 1;
+      } else if (this.isMenuDivider(children[nextIndex])) {
+        nextIndex += offset;
+      }
+
+      this.focusOnCurrentElement(nextIndex);
+
+      nextState.selectedIndex = nextIndex;
+      this.setState({ ...nextState });
+    };
+
     // TODO: A better solution to skipping the divider
     isMenuDivider = child => !child.props.value &&
         (child.type.displayName === 'ThemedMenuDivider' || child.type.displayName === 'ThemedComponent');
@@ -269,25 +240,25 @@ const factory = (MenuItem) => {
       if (!nextChildRef) {
         return;
       }
-      const elementDom = ReactDOM.findDOMNode(nextChildRef);
 
+      const elementDom = ReactDOM.findDOMNode(nextChildRef);
       if (elementDom) {
         elementDom.focus();
       }
     };
 
     handleOnKeyDown = (event) => {
-      if (event.key === 'ArrowDown') {
-        this.onArrowDown();
+      if (event.key === DOWN || event.key === UP) {
+        this.nextSuggestion(event.key === DOWN ? DOWN : UP);
 
         event.preventDefault();
         event.stopPropagation();
-      } else if (event.key === 'ArrowUp') {
-        this.onArrowUp();
+      } else if (event.key === ESC) {
+        this.resetMenuDropdown();
 
         event.preventDefault();
         event.stopPropagation();
-      } else if (event.key === 'Escape' || event.key === 'Tab') {
+      } else if (event.key === TAB) {
         this.resetMenuDropdown();
       }
     };
@@ -296,7 +267,7 @@ const factory = (MenuItem) => {
       if (this.state.active) {
         this.setState({
           active: false,
-          cursorIndex: undefined,
+          selectedIndex: -1,
         });
       }
     };
@@ -311,14 +282,20 @@ const factory = (MenuItem) => {
     }
 
     renderItems() {
-      return React.Children.map(this.props.children, (item, itemIndex) => {
+      const { selected, selectable, children, ripple } = this.props;
+      const { selectedIndex } = this.state;
+
+      return React.Children.map(children, (item, itemIndex) => {
+        const isSameIndex = selectedIndex === itemIndex;
+        const valueNotUndefined = typeof item.props.value !== 'undefined';
+        const valueEqualSelected = item.props.value === selected;
+
         if (!item) {
           return item;
         }
 
         let propsToPass = {
-          selected: this.props.selectable
-            && (this.state.cursorIndex === itemIndex),
+          selected: selectable && isSameIndex,
           ref: (child) => {
             this.childRefs.push(child);
           },
@@ -327,10 +304,8 @@ const factory = (MenuItem) => {
         if (item.type === MenuItem) {
           propsToPass = {
             ...propsToPass,
-            ripple: item.props.ripple || this.props.ripple,
-            selected: typeof item.props.value !== 'undefined'
-              && this.props.selectable
-              && (item.props.value === this.props.selected || this.state.cursorIndex === itemIndex),
+            ripple: item.props.ripple || ripple,
+            selected: valueNotUndefined && selectable && (valueEqualSelected || isSameIndex),
             onClick: this.handleSelect.bind(this, item),
           };
         }
@@ -340,7 +315,7 @@ const factory = (MenuItem) => {
     }
 
     render() {
-      const { theme, tabIndex } = this.props;
+      const { theme, tabIndex, linkRef } = this.props;
       const outlineStyle = { width: this.state.width, height: this.state.height };
       const className = classnames([theme.menu, theme[this.state.position]], {
         [theme.active]: this.state.active,
@@ -354,6 +329,7 @@ const factory = (MenuItem) => {
           style={this.getRootStyle()}
           tabIndex={tabIndex}
           onKeyDown={this.handleOnKeyDown}
+          ref={linkRef}
         >
           {this.props.outline ? <div className={theme.outline} style={outlineStyle} /> : null}
           <ul
