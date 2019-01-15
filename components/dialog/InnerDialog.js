@@ -25,22 +25,22 @@ const factory = (Button) => {
 
     return (
       <div data-react-toolbox="dialog" className={className}>
-        {overlayTopActions.length
-          ? <div className={props.theme.topNavigation} >
+        {overlayTopActions.length ?
+          <div className={props.theme.topNavigation}>
             {overlayTopActions}
-          </div>
-          : null
+          </div> :
+          null
         }
         <div className={props.theme.dialogContent}>
           <section role="body" className={props.theme.body}>
             {props.title ? <h6 className={props.theme.title}>{props.title}</h6> : null}
             {props.children}
           </section>
-          {actions.length
-          ? <nav className={props.theme.navigation}>
-            {actions}
-          </nav>
-          : null
+          {actions.length ?
+            <nav className={props.theme.navigation}>
+              {actions}
+            </nav> :
+            null
         }
         </div>
       </div>);
