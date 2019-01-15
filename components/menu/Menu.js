@@ -60,6 +60,7 @@ const factory = (MenuItem) => {
     state = {
       active: this.props.active,
       rippled: false,
+      cursorIndex: undefined,
     };
 
     componentDidMount() {
@@ -141,6 +142,68 @@ const factory = (MenuItem) => {
       clearTimeout(this.activateTimeoutHandle);
     }
 
+    onArrowDown = () => {
+      const { children } = this.props;
+      const { active, cursorIndex } = this.state;
+      const nextState = {};
+
+      if (!active) {
+        nextState.active = true;
+        nextState.cursorIndex = 0;
+      } else if (cursorIndex + 1 > children.length - 1) {
+        nextState.cursorIndex = 0;
+      } else {
+        let nextIndex = cursorIndex + 1;
+        const nextChild = children[nextIndex];
+
+        if (!nextChild) {
+          return;
+        }
+
+        if (this.isMenuDivider(nextChild)) {
+          nextIndex += 1;
+        }
+
+        nextState.cursorIndex = nextIndex;
+      }
+      this.focusOnCurrentElement(nextState.cursorIndex);
+
+      this.setState({
+        ...nextState,
+      });
+    };
+
+    onArrowUp = () => {
+      const { children } = this.props;
+      const { active, cursorIndex } = this.state;
+      const nextState = {};
+
+      if (!active) {
+        nextState.active = true;
+        nextState.cursorIndex = children.length - 1;
+      } else if (cursorIndex - 1 < 0) {
+        nextState.cursorIndex = children.length - 1;
+      } else {
+        let nextIndex = cursorIndex - 1;
+        const nextChild = children[nextIndex];
+
+        if (!nextChild) {
+          return;
+        }
+
+        if (this.isMenuDivider(nextChild)) {
+          nextIndex -= 1;
+        }
+
+        nextState.cursorIndex = nextIndex;
+      }
+      this.focusOnCurrentElement(nextState.cursorIndex);
+
+      this.setState({
+        ...nextState,
+      });
+    };
+
     getMenuStyle() {
       const { width, height, position } = this.state;
       if (position !== POSITION.STATIC) {
@@ -194,6 +257,50 @@ const factory = (MenuItem) => {
       });
     };
 
+    childRefs = [];
+
+    // TODO: A better solution to skipping the divider
+    isMenuDivider = child => !child.props.value &&
+        (child.type.displayName === 'ThemedMenuDivider' || child.type.displayName === 'ThemedComponent');
+
+    focusOnCurrentElement = (currentChildIndex) => {
+      const nextChildRef = this.childRefs[currentChildIndex];
+
+      if (!nextChildRef) {
+        return;
+      }
+      const elementDom = ReactDOM.findDOMNode(nextChildRef);
+
+      if (elementDom) {
+        elementDom.focus();
+      }
+    };
+
+    handleOnKeyDown = (event) => {
+      if (event.key === 'ArrowDown') {
+        this.onArrowDown();
+
+        event.preventDefault();
+        event.stopPropagation();
+      } else if (event.key === 'ArrowUp') {
+        this.onArrowUp();
+
+        event.preventDefault();
+        event.stopPropagation();
+      } else if (event.key === 'Escape' || event.key === 'Tab') {
+        this.resetMenuDropdown();
+      }
+    };
+
+    resetMenuDropdown = () => {
+      if (this.state.active) {
+        this.setState({
+          active: false,
+          cursorIndex: undefined,
+        });
+      }
+    };
+
     show() {
       const { width, height } = this.menuNode.getBoundingClientRect();
       this.setState({ active: true, width, height });
@@ -204,18 +311,31 @@ const factory = (MenuItem) => {
     }
 
     renderItems() {
-      return React.Children.map(this.props.children, (item) => {
-        if (!item) return item;
+      return React.Children.map(this.props.children, (item, itemIndex) => {
+        if (!item) {
+          return item;
+        }
+
+        let propsToPass = {
+          selected: this.props.selectable
+            && (this.state.cursorIndex === itemIndex),
+          ref: (child) => {
+            this.childRefs.push(child);
+          },
+        };
+
         if (item.type === MenuItem) {
-          return React.cloneElement(item, {
+          propsToPass = {
+            ...propsToPass,
             ripple: item.props.ripple || this.props.ripple,
             selected: typeof item.props.value !== 'undefined'
               && this.props.selectable
-              && item.props.value === this.props.selected,
+              && (item.props.value === this.props.selected || this.state.cursorIndex === itemIndex),
             onClick: this.handleSelect.bind(this, item),
-          });
+          };
         }
-        return React.cloneElement(item);
+
+        return React.cloneElement(item, propsToPass);
       });
     }
 
@@ -228,7 +348,13 @@ const factory = (MenuItem) => {
       }, this.props.className);
 
       return (
-        <div data-react-toolbox="menu" className={className} style={this.getRootStyle()} tabIndex={tabIndex}>
+        <div
+          data-react-toolbox="menu"
+          className={className}
+          style={this.getRootStyle()}
+          tabIndex={tabIndex}
+          onKeyDown={this.handleOnKeyDown}
+        >
           {this.props.outline ? <div className={theme.outline} style={outlineStyle} /> : null}
           <ul
             ref={(node) => { this.menuNode = node; }}
