@@ -286,13 +286,13 @@ const factory = (MenuItem) => {
       const { selectedIndex } = this.state;
 
       return React.Children.map(children, (item, itemIndex) => {
-        const isSameIndex = selectedIndex === itemIndex;
-        const valueNotUndefined = typeof item.props.value !== 'undefined';
-        const valueEqualSelected = item.props.value === selected;
-
         if (!item) {
           return item;
         }
+
+        const isSameIndex = selectedIndex === itemIndex;
+        const valueNotUndefined = typeof item.props.value !== 'undefined';
+        const valueEqualSelected = item.props.value === selected;
 
         let propsToPass = {
           selected: selectable && isSameIndex,
