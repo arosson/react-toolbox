@@ -28,7 +28,7 @@ const factory = (MenuItem) => {
       active: PropTypes.bool,
       children: PropTypes.node,
       className: PropTypes.string,
-      linkRef: PropTypes.func,
+      menuRef: PropTypes.func,
       onClickOutside: PropTypes.func,
       onHide: PropTypes.func,
       onSelect: PropTypes.func,
@@ -56,7 +56,7 @@ const factory = (MenuItem) => {
 
     static defaultProps = {
       active: false,
-      linkRef: null,
+      menuRef: null,
       outline: true,
       parentContainerRef: null,
       position: POSITION.STATIC,
@@ -312,7 +312,7 @@ const factory = (MenuItem) => {
     }
 
     render() {
-      const { theme, tabIndex, linkRef } = this.props;
+      const { theme, tabIndex, menuRef } = this.props;
       const outlineStyle = { width: this.state.width, height: this.state.height };
       const className = classnames([theme.menu, theme[this.state.position]], {
         [theme.active]: this.state.active,
@@ -326,7 +326,7 @@ const factory = (MenuItem) => {
           style={this.getRootStyle()}
           tabIndex={tabIndex}
           onKeyDown={this.handleOnKeyDown}
-          ref={linkRef}
+          ref={menuRef}
         >
           {this.props.outline ? <div className={theme.outline} style={outlineStyle} /> : null}
           <ul
