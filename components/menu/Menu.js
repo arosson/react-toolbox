@@ -215,6 +215,7 @@ const factory = (MenuItem) => {
       if (!active) {
         nextState.active = true;
       }
+
       if (nextIndex > children.length - 1) {
         nextIndex = 0;
       } else if (nextIndex < 0) {
