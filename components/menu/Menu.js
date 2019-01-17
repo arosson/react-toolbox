@@ -215,12 +215,11 @@ const factory = (MenuItem) => {
       if (!active) {
         nextState.active = true;
       }
-
       if (nextIndex > children.length - 1) {
         nextIndex = 0;
       } else if (nextIndex < 0) {
         nextIndex = children.length - 1;
-      } else if (this.isMenuDivider(children[nextIndex])) {
+      } else if (this.skipKeyboardNav(children[nextIndex])) {
         nextIndex += offset;
       }
 
@@ -230,9 +229,7 @@ const factory = (MenuItem) => {
       this.setState({ ...nextState });
     };
 
-    // TODO: A better solution to skipping the divider
-    isMenuDivider = child => !child.props.value &&
-        (child.type.displayName === 'ThemedMenuDivider' || child.type.displayName === 'ThemedComponent');
+    skipKeyboardNav = child => child.props && child.props.skipKeyboardNav;
 
     focusOnCurrentElement = (currentChildIndex) => {
       const nextChildRef = this.childRefs[currentChildIndex];
