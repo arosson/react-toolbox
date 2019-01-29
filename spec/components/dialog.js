@@ -39,12 +39,6 @@ class DialogTest extends React.Component {
     { label: 'Agree', primary: true, onClick: this.handleToggle },
   ];
 
-  overlayTopActions = [
-    { label: 'Back to Ricochet', icon: 'bookmark', onClick: this.handleToggle },
-    { label: 'Esc', onClick: this.handleToggle },
-    { icon: 'close', onClick: this.handleToggle }
-  ];
-
   actionsInner = [
     { label: 'Disagree', primary: true, onClick: this.handleToggleInner },
     { label: 'Agree', primary: true, onClick: this.handleToggleInner },
@@ -67,7 +61,6 @@ class DialogTest extends React.Component {
         <ContextComponent>
           <Dialog
             actions={this.actions}
-            overlayTopActions={this.overlayTopActions}
             active={this.state.active}
             type={this.state.type}
             title="Use Google's location service?"
