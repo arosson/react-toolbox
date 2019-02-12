@@ -8,9 +8,18 @@ const MenuDivider = ({ theme }) => (
 );
 
 MenuDivider.propTypes = {
+  // This prop is not used internally by the component,
+  // it is used as a flag to be considered skippable
+  // when navigating through the menu using the keyboard
+  // eslint-disable-next-line react/no-unused-prop-types
+  skipKeyboardNav: PropTypes.bool,
   theme: PropTypes.shape({
     menuDivider: PropTypes.string,
   }),
+};
+
+MenuDivider.defaultProps = {
+  skipKeyboardNav: true,
 };
 
 export default themr(MENU)(MenuDivider);
