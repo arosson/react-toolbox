@@ -26,6 +26,7 @@ const factory = (Overlay, Button) => {
       />
       <InnerDialog
         actions={props.actions}
+        overlayTopActions={props.overlayTopActions}
         theme={props.theme}
         title={props.title}
         type={props.type}
@@ -51,6 +52,11 @@ const factory = (Overlay, Button) => {
     onOverlayMouseDown: PropTypes.func,
     onOverlayMouseMove: PropTypes.func,
     onOverlayMouseUp: PropTypes.func,
+    overlayTopActions: PropTypes.arrayOf(PropTypes.shape({
+      className: PropTypes.string,
+      label: PropTypes.string,
+      icon: PropTypes.string,
+    })),
     theme: PropTypes.shape({
       active: PropTypes.string,
       body: PropTypes.string,
@@ -68,6 +74,7 @@ const factory = (Overlay, Button) => {
 
   Dialog.defaultProps = {
     actions: [],
+    overlayTopActions: [],
     active: false,
     type: 'normal',
   };

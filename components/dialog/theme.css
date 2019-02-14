@@ -18,9 +18,6 @@
 }
 
 .dialog {
-  background-color: var(--dialog-color-white);
-  border-radius: var(--dialog-border-radius);
-  box-shadow: var(--zdepth-shadow-5);
   display: flex;
   flex-direction: column;
   max-height: 96vh;
@@ -38,6 +35,19 @@
     transform: translateY(0%);
   }
 }
+
+.dialogContent {
+    background-color: var(--dialog-color-white);
+    border-radius: var(--dialog-border-radius);
+    box-shadow: var(--zdepth-shadow-5);
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .topNavigation {
+    flex-grow: 0;
+    padding: var(--dialog-navigation-padding);
+  }
 
 .small {
   width: 30vw;
