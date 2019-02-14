@@ -6945,7 +6945,6 @@ react-deep-force-update@^1.0.0:
 react-dom@16.2.0:
   version "16.2.0"
   resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react-dom/-/react-dom-16.2.0.tgz#69003178601c0ca19b709b33a83369fe6124c044"
-  integrity sha1-aQAxeGAcDKGbcJszqDNp/mEkwEQ=
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -6996,7 +6995,6 @@ react-transition-group@^2.2.1:
 react@16.2.0:
   version "16.2.0"
   resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react/-/react-16.2.0.tgz#a31bd2dab89bff65d42134fa187f24d054c273ba"
-  integrity sha1-oxvS2rib/2XUITT6GH8k0FTCc7o=
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
