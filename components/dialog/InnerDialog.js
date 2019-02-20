@@ -8,23 +8,40 @@ import InjectButton from '../button/Button';
 
 const factory = (Button) => {
   const InnerDialog = (props) => {
-    const actions = props.actions.map((action, idx) => {
-      const className = classnames(props.theme.button, { [action.className]: action.className });
-      return <Button key={idx} {...action} className={className} />; // eslint-disable-line
+    const actions = props.actions.map(({ label = '', icon = '', className = '', ...rest }) => {
+      const buttonClassName = classnames(props.theme.button, { [className]: className });
+      return (
+        <Button
+          key={label || icon}
+          label={label}
+          icon={icon}
+          {...rest}
+          className={buttonClassName}
+        />);
     });
 
-    const overlayTopActions = props.overlayTopActions.map((action) => {
-      const className = classnames(props.theme.button, { [action.className]: action.className });
-      return <Button key={action.label || action.icon} {...action} className={className} />;
+    const overlayTopActions = props.overlayTopActions.map(({ label = '', icon = '', className = '', ...rest }) => {
+      const buttonClassName = classnames(props.theme.button, { [className]: className });
+      return (
+        <Button
+          key={label || icon}
+          label={label}
+          icon={icon}
+          {...rest}
+          className={buttonClassName}
+        />);
     });
-
-    const className = classnames([props.theme.dialog,
-      props.theme[props.type]], {
-        [props.theme.active]: props.active,
-      }, props.className);
 
     return (
-      <div data-react-toolbox="dialog" className={className}>
+      <div
+        data-react-toolbox="dialog"
+        className={classnames([
+          props.theme.dialog,
+          props.theme[props.type]],
+          {
+            [props.theme.active]: props.active,
+          }, props.className)}
+      >
         {overlayTopActions.length ?
           <div className={props.theme.topNavigation}>
             {overlayTopActions}
@@ -64,7 +81,6 @@ const factory = (Button) => {
       active: PropTypes.string,
       body: PropTypes.string,
       button: PropTypes.string,
-      container: PropTypes.string,
       dialog: PropTypes.string,
       dialogContent: PropTypes.string,
       navigation: PropTypes.string,
