@@ -56,11 +56,6 @@ class DialogTest extends React.Component {
     { label: 'Agree', primary: true, onClick: this.handleToggleTopActions },
   ];
   
-  overlayTopActions = [
-    { label: 'Back to Ricochet', icon: 'bookmark', onClick: this.handleToggleTopActions },
-    { label: 'Esc', onClick: this.handleToggleTopActions, className:'red' },
-    { icon: 'close', onClick: this.handleToggleTopActions }
-  ];
 
   render() {
     return (
