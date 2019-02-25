@@ -6942,18 +6942,24 @@ react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
 
-react-dom@16.2.0:
-  version "16.2.0"
-  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react-dom/-/react-dom-16.2.0.tgz#69003178601c0ca19b709b33a83369fe6124c044"
+react-dom@^16.8.1:
+  version "16.8.3"
+  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react-dom/-/react-dom-16.8.3.tgz#ae236029e66210783ac81999d3015dfc475b9c32"
+  integrity sha1-riNgKeZiEHg6yBmZ0wFd/EdbnDI=
   dependencies:
-    fbjs "^0.8.16"
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
-    prop-types "^15.6.0"
+    prop-types "^15.6.2"
+    scheduler "^0.13.3"
 
 react-is@^16.5.2:
   version "16.5.2"
   resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react-is/-/react-is-16.5.2.tgz#e2a7b7c3f5d48062eb769fcb123505eb928722e3"
+
+react-is@^16.8.3:
+  version "16.8.3"
+  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react-is/-/react-is-16.8.3.tgz#4ad8b029c2a718fc0cfc746c8d4e1b7221e5387d"
+  integrity sha1-StiwKcKnGPwM/HRsjU4bciHlOH0=
 
 react-proxy@^1.1.7:
   version "1.1.8"
@@ -6962,13 +6968,23 @@ react-proxy@^1.1.7:
     lodash "^4.6.1"
     react-deep-force-update "^1.0.0"
 
-react-test-renderer@^16.0.0-0, react-test-renderer@^16.2.0:
+react-test-renderer@^16.0.0-0:
   version "16.2.0"
   resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react-test-renderer/-/react-test-renderer-16.2.0.tgz#bddf259a6b8fcd8555f012afc8eacc238872a211"
   dependencies:
     fbjs "^0.8.16"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
+
+react-test-renderer@^16.8.1:
+  version "16.8.3"
+  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react-test-renderer/-/react-test-renderer-16.8.3.tgz#230006af264cc46aeef94392e04747c21839e05e"
+  integrity sha1-IwAGryZMxGru+UOS4EdHwhg54F4=
+  dependencies:
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    react-is "^16.8.3"
+    scheduler "^0.13.3"
 
 react-transform-catch-errors@^1.0.2:
   version "1.0.2"
@@ -6992,14 +7008,15 @@ react-transition-group@^2.2.1:
     prop-types "^15.5.8"
     warning "^3.0.0"
 
-react@16.2.0:
-  version "16.2.0"
-  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react/-/react-16.2.0.tgz#a31bd2dab89bff65d42134fa187f24d054c273ba"
+react@^16.8.1:
+  version "16.8.3"
+  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/react/-/react-16.8.3.tgz#c6f988a2ce895375de216edcfaedd6b9a76451d9"
+  integrity sha1-xvmIos6JU3XeIW7c+u3WuadkUdk=
   dependencies:
-    fbjs "^0.8.16"
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
-    prop-types "^15.6.0"
+    prop-types "^15.6.2"
+    scheduler "^0.13.3"
 
 read-cache@^1.0.0:
   version "1.0.0"
@@ -7476,6 +7493,14 @@ sax@^1.2.4:
 sax@~1.2.1:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.2.tgz#fd8631a23bc7826bef5d871bdb87378c95647828"
+
+scheduler@^0.13.3:
+  version "0.13.3"
+  resolved "http://artifactory.shuttercorp.net/artifactory/api/npm/npm-composite/scheduler/-/scheduler-0.13.3.tgz#bed3c5850f62ea9c716a4d781f9daeb9b2a58896"
+  integrity sha1-vtPFhQ9i6pxxak14H52uubKliJY=
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 schema-utils@^0.3.0, schema-utils@^0.x:
   version "0.3.0"
