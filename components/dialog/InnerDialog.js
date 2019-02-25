@@ -8,27 +8,46 @@ import InjectButton from '../button/Button';
 
 const factory = (Button) => {
   const InnerDialog = (props) => {
-    const actions = props.actions.map((action, idx) => {
-      const className = classnames(props.theme.button, { [action.className]: action.className });
-      return <Button key={idx} {...action} className={className} />; // eslint-disable-line
+    const actions = props.actions.map(({ label = '', icon = '', className = '', ...rest }) => {
+      const buttonClassName = classnames(props.theme.button, { [className]: className });
+      return (
+        <Button
+          key={label || icon}
+          label={label}
+          icon={icon}
+          {...rest}
+          className={buttonClassName}
+        />);
     });
 
-    const className = classnames([props.theme.dialog, props.theme[props.type]], {
-      [props.theme.active]: props.active,
-    }, props.className);
-
     return (
-      <div data-react-toolbox="dialog" className={className}>
-        <section role="body" className={props.theme.body}>
-          {props.title ? <h6 className={props.theme.title}>{props.title}</h6> : null}
-          {props.children}
-        </section>
-        {actions.length
-          ? <nav className={props.theme.navigation}>
-            {actions}
-          </nav>
-          : null
+      <div
+        data-react-toolbox="dialog"
+        className={classnames([
+          props.theme.dialog,
+          props.theme[props.type]],
+          {
+            [props.theme.active]: props.active,
+          }, props.className)}
+      >
+        {props.overlayTopActions ?
+          <div className={props.theme.topNavigation}>
+            {props.overlayTopActions}
+          </div> :
+          null
         }
+        <div className={props.theme.dialogContent}>
+          <section role="body" className={props.theme.body}>
+            {props.title ? <h6 className={props.theme.title}>{props.title}</h6> : null}
+            {props.children}
+          </section>
+          {actions.length
+            ? <nav className={props.theme.navigation}>
+              {actions}
+            </nav>
+            : null
+          }
+        </div>
       </div>);
   };
 
@@ -41,14 +60,17 @@ const factory = (Button) => {
     active: PropTypes.bool,
     children: PropTypes.node,
     className: PropTypes.string,
+    overlayTopActions: PropTypes.node,
     theme: PropTypes.shape({
       active: PropTypes.string,
       body: PropTypes.string,
       button: PropTypes.string,
       dialog: PropTypes.string,
+      dialogContent: PropTypes.string,
       navigation: PropTypes.string,
       overflow: PropTypes.string,
       title: PropTypes.string,
+      topNavigation: PropTypes.string,
     }),
     title: PropTypes.string,
     type: PropTypes.string,
@@ -56,6 +78,7 @@ const factory = (Button) => {
 
   InnerDialog.defaultProps = {
     actions: [],
+    overlayTopActions: null,
     active: true,
     type: 'normal',
   };

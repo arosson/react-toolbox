@@ -15,6 +15,7 @@ class DialogTest extends React.Component {
   state = {
     active: false,
     innerActive: false,
+    topActionsActive: false,
     type: 'normal',
   };
 
@@ -27,6 +28,12 @@ class DialogTest extends React.Component {
   handleToggleInner = () => {
     this.setState({
       innerActive: !this.state.innerActive,
+    });
+  };
+
+  handleToggleTopActions = () => {
+    this.setState({
+      topActionsActive: !this.state.topActionsActive,
     });
   };
 
@@ -44,6 +51,12 @@ class DialogTest extends React.Component {
     { label: 'Agree', primary: true, onClick: this.handleToggleInner },
   ];
 
+  actionsSecondDialog = [
+    { label: 'Disagree', primary: true, onClick: this.handleToggleTopActions },
+    { label: 'Agree', primary: true, onClick: this.handleToggleTopActions },
+  ];
+  
+
   render() {
     return (
       <section>
@@ -58,6 +71,7 @@ class DialogTest extends React.Component {
         />
         <Button label="Show Dialog" raised primary onClick={this.handleToggle} />
         <Button label="Show InnerDialog" raised primary onClick={this.handleToggleInner} />
+        <Button label="Show Overlay Top Actions" raised primary onClick={this.handleToggleTopActions} />
         <ContextComponent>
           <Dialog
             actions={this.actions}
@@ -78,6 +92,25 @@ class DialogTest extends React.Component {
             >
               <DialogChild />
             </InnerDialog>}
+          {this.state.topActionsActive && 
+            <Dialog
+              actions={this.actionsSecondDialog}
+              overlayTopActions={
+                <Button 
+                label="Back to Ricochet" 
+                icon="bookmark"
+                 onClick={this.handleToggleTopActions}
+                />
+              }
+              active={this.state.topActionsActive}
+              type={this.state.type}
+              title="Use Google's location service?"
+              onOverlayClick={this.handleToggleTopActions}
+              onEscKeyDown={this.handleToggleTopActions}
+            >
+            <p>Let Google help apps <strong>determine location</strong>. This means sending anonymous location data to Google, even when no apps are running.</p>
+            <DialogChild />
+          </Dialog>}
         </ContextComponent>
       </section>
     );
