@@ -52,11 +52,7 @@ const factory = (Overlay, Button) => {
     onOverlayMouseDown: PropTypes.func,
     onOverlayMouseMove: PropTypes.func,
     onOverlayMouseUp: PropTypes.func,
-    overlayTopActions: PropTypes.arrayOf(PropTypes.shape({
-      className: PropTypes.string,
-      label: PropTypes.string,
-      icon: PropTypes.string,
-    })),
+    overlayTopActions: PropTypes.node,
     theme: PropTypes.shape({
       active: PropTypes.string,
       body: PropTypes.string,
@@ -74,7 +70,7 @@ const factory = (Overlay, Button) => {
 
   Dialog.defaultProps = {
     actions: [],
-    overlayTopActions: [],
+    overlayTopActions: null,
     active: false,
     type: 'normal',
   };

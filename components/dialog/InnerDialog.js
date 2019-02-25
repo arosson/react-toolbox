@@ -20,18 +20,6 @@ const factory = (Button) => {
         />);
     });
 
-    const overlayTopActions = props.overlayTopActions.map(({ label = '', icon = '', className = '', ...rest }) => {
-      const buttonClassName = classnames(props.theme.button, { [className]: className });
-      return (
-        <Button
-          key={label || icon}
-          label={label}
-          icon={icon}
-          {...rest}
-          className={buttonClassName}
-        />);
-    });
-
     return (
       <div
         data-react-toolbox="dialog"
@@ -42,9 +30,9 @@ const factory = (Button) => {
             [props.theme.active]: props.active,
           }, props.className)}
       >
-        {overlayTopActions.length ?
+        {props.overlayTopActions ?
           <div className={props.theme.topNavigation}>
-            {overlayTopActions}
+            {props.overlayTopActions}
           </div> :
           null
         }
@@ -72,11 +60,7 @@ const factory = (Button) => {
     active: PropTypes.bool,
     children: PropTypes.node,
     className: PropTypes.string,
-    overlayTopActions: PropTypes.arrayOf(PropTypes.shape({
-      className: PropTypes.string,
-      label: PropTypes.string,
-      icon: PropTypes.string,
-    })),
+    overlayTopActions: PropTypes.node,
     theme: PropTypes.shape({
       active: PropTypes.string,
       body: PropTypes.string,
@@ -94,7 +78,7 @@ const factory = (Button) => {
 
   InnerDialog.defaultProps = {
     actions: [],
-    overlayTopActions: [],
+    overlayTopActions: null,
     active: true,
     type: 'normal',
   };

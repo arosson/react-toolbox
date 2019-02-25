@@ -100,7 +100,13 @@ class DialogTest extends React.Component {
           {this.state.topActionsActive && 
             <Dialog
               actions={this.actionsSecondDialog}
-              overlayTopActions={this.overlayTopActions}
+              overlayTopActions={
+                <Button 
+                label="Back to Ricochet" 
+                icon="bookmark"
+                 onClick={this.handleToggleTopActions}
+                />
+              }
               active={this.state.topActionsActive}
               type={this.state.type}
               title="Use Google's location service?"
