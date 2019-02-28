@@ -6,4 +6,5 @@
   --card-padding: calc(1.6 * var(--unit));
   --card-padding-lg: calc(2 * var(--unit));
   --card-font-size: var(--font-size-small);
+  --card-bottom-spacing-default: var(--spacing-default);
 }

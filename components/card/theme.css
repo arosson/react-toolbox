@@ -26,7 +26,8 @@
   position: relative;
 
   &.wide,
-  &.square {
+  &.square,
+  &.letterbox {
     width: 100%;
 
     & .content {
@@ -47,12 +48,17 @@
     height: 0;
   }
 
-  &.wide::after {
+  &.wide::after,
+  &.letterbox::after {
     padding-top: 56.25%;
   }
 
   &.square::after {
     padding-top: 100%;
+  }
+
+  &.letterbox {
+    background-size: contain;
   }
 
   & .content {
@@ -176,4 +182,12 @@
       margin-right: 0;
     }
   }
+}
+
+.bottom-spacing-none {
+  margin-bottom: 0;
+}
+
+.bottom-spacing-default {
+  margin-bottom: var(--card-bottom-spacing-default);
 }

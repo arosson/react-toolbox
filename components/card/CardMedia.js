@@ -4,8 +4,14 @@ import { themr } from 'react-css-themr';
 import classnames from 'classnames';
 import { CARD } from '../identifiers';
 
+const BOTTOM_SPACING = {
+  none: 'none',
+  default: 'default',
+};
+
 const CardMedia = ({
   aspectRatio,
+  bottomSpacing,
   children,
   className,
   color,
@@ -16,6 +22,7 @@ const CardMedia = ({
 }) => {
   const classes = classnames(theme.cardMedia, {
     [theme[aspectRatio]]: aspectRatio,
+    [theme[`bottom-spacing-${bottomSpacing}`]]: bottomSpacing,
   }, className);
 
   const innerClasses = classnames(theme.content, {
@@ -37,7 +44,8 @@ const CardMedia = ({
 };
 
 CardMedia.propTypes = {
-  aspectRatio: PropTypes.oneOf(['wide', 'square']),
+  aspectRatio: PropTypes.oneOf(['wide', 'square', 'letterbox']),
+  bottomSpacing: PropTypes.oneOf(Object.keys(BOTTOM_SPACING)),
   children: PropTypes.node,
   className: PropTypes.string,
   color: PropTypes.string,
@@ -53,6 +61,10 @@ CardMedia.propTypes = {
     square: PropTypes.string,
     wide: PropTypes.string,
   }),
+};
+
+CardMedia.defaultProps = {
+  bottomSpacing: BOTTOM_SPACING.default,
 };
 
 export default themr(CARD)(CardMedia);

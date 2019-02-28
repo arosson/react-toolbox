@@ -111,6 +111,16 @@ const cards = {
         </CardMedia>
       </Card>
     ),
+  }, {
+    name: 'letterbox Media Card',
+    component: (
+      <Card className={style.card}>
+        <CardMedia
+          aspectRatio="letterbox"
+          image="https://placeimg.com/700/700/nature"
+        />
+      </Card>
+    ),
   }],
   avatar: [{
     name: 'Avatar Card Title',
