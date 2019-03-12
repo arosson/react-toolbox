@@ -63,6 +63,7 @@ const factory = (Button) => {
       const className = classnames([theme.snackbar, theme[type]], {
         [theme.active]: active,
       }, this.props.className);
+      const buttonThemeMode = (type === 'success' || type === 'general') ? 'dark' : 'default';
 
       return (
         <Portal className={theme.portal}>
@@ -71,7 +72,13 @@ const factory = (Button) => {
               {label}
               {children}
             </span>
-            {action ? <Button className={theme.button} label={action} onClick={onClick} /> : null}
+            {action ?
+              <Button
+                className={theme.button}
+                themeMode={buttonThemeMode}
+                label={action}
+                onClick={onClick}
+              /> : null}
           </div>
         </Portal>
       );
